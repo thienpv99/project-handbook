@@ -1,0 +1,14 @@
+# GitLab Pages — Deploy static site automatically on every push to main
+# URL sau khi deploy: https://internal-team8622216.gitlab.io/project-handbook
+
+pages:
+  stage: deploy
+  script:
+    # No build step needed — pure static HTML/CSS/JS
+    - mkdir -p public
+    - cp -r index.html assets public/
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
