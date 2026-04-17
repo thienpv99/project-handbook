@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -11,6 +11,33 @@
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
+
+<!-- ===== LOGIN OVERLAY ===== -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-icon">🏦</div>
+      <div class="login-brand">VietBank</div>
+      <div class="login-sub">Deployment Runbook · Confidential</div>
+    </div>
+    <form id="login-form" onsubmit="handleLogin(event)" autocomplete="off">
+      <div class="login-field">
+        <label for="login-username">Username</label>
+        <input type="text" id="login-username" placeholder="Enter username" autocomplete="username" required />
+      </div>
+      <div class="login-field">
+        <label for="login-password">Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="login-password" placeholder="Enter password" autocomplete="current-password" required />
+          <button type="button" class="pw-toggle" onclick="togglePw()" aria-label="Show password">👁</button>
+        </div>
+      </div>
+      <div id="login-error" class="login-error"></div>
+      <button type="submit" class="login-btn" id="login-submit">Sign in</button>
+    </form>
+    <div class="login-footer">🔒 Authorized Personnel Only · SBV Circular 09/2020/TT-NHNN</div>
+  </div>
+</div>
 
 <!-- Mobile toggle -->
 <button id="sidebar-toggle" aria-label="Toggle navigation" onclick="toggleSidebar()">
@@ -598,6 +625,11 @@
   🏦 VietBank · Deployment Runbook v2.4 · Internal Use Only · Classification: CONFIDENTIAL<br>
   Compliant with SBV Circular 09/2020/TT-NHNN &amp; ISO 27001 · Approved by Technology Risk Committee · © 2025
 </footer>
+
+<!-- Logout button (fixed bottom-right) -->
+<button id="logout-btn" onclick="handleLogout()" title="Sign out">
+  <span>⎋</span> Sign out
+</button>
 
 <script src="assets/js/main.js"></script>
 </body>

@@ -1,7 +1,79 @@
 /**
  * main.js — VietBank Deployment Runbook
- * Handles: sidebar navigation, accordion, role tabs, DoD checklist, responsive grids
+ * Handles: authentication, sidebar navigation, accordion, role tabs, DoD checklist
  */
+
+// ============================================================
+// AUTHENTICATION
+// Credentials are intentionally client-side for this static
+// internal tool. Not suitable for high-security prod systems.
+// ============================================================
+const AUTH_KEY  = 'vb_runbook_auth';
+const AUTH_USER = 'admin';
+const AUTH_PASS = 'Admin@!23';
+
+/** Check session on every page load */
+(function initAuth() {
+  if (sessionStorage.getItem(AUTH_KEY) !== 'authenticated') {
+    // Lock the page — hide all app content
+    document.body.classList.add('locked');
+  } else {
+    // Already logged in — hide login overlay
+    const overlay = document.getElementById('login-overlay');
+    if (overlay) overlay.classList.add('hidden');
+  }
+})();
+
+/** Handle login form submit */
+function handleLogin(e) {
+  e.preventDefault();
+  const username  = document.getElementById('login-username').value.trim();
+  const password  = document.getElementById('login-password').value;
+  const errorBox  = document.getElementById('login-error');
+  const submitBtn = document.getElementById('login-submit');
+
+  // Loading state
+  submitBtn.disabled = true;
+  submitBtn.classList.add('loading');
+  errorBox.classList.remove('show');
+
+  // Small delay for UX feel
+  setTimeout(() => {
+    if (username === AUTH_USER && password === AUTH_PASS) {
+      // ✅ Correct — grant access
+      sessionStorage.setItem(AUTH_KEY, 'authenticated');
+      document.body.classList.remove('locked');
+      document.getElementById('login-overlay').classList.add('hidden');
+    } else {
+      // ❌ Wrong credentials
+      errorBox.textContent = '⚠️ Incorrect username or password. Please try again.';
+      errorBox.classList.add('show');
+      document.getElementById('login-password').value = '';
+      document.getElementById('login-password').focus();
+    }
+    submitBtn.disabled = false;
+    submitBtn.classList.remove('loading');
+  }, 400);
+}
+
+/** Handle logout */
+function handleLogout() {
+  sessionStorage.removeItem(AUTH_KEY);
+  document.body.classList.add('locked');
+  document.getElementById('login-overlay').classList.remove('hidden');
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-error').classList.remove('show');
+}
+
+/** Toggle password visibility */
+function togglePw() {
+  const input  = document.getElementById('login-password');
+  const toggle = document.querySelector('.pw-toggle');
+  const isHidden = input.type === 'password';
+  input.type      = isHidden ? 'text' : 'password';
+  toggle.textContent = isHidden ? '🙈' : '👁';
+}
 
 // ============================================================
 // SIDEBAR — Mobile toggle
