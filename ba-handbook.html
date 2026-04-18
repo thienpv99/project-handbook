@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BA Project Implement Handbook | VietBank</title>
+  <meta name="description" content="Business Analyst Project Implement Handbook — BABOK v3 aligned, Hybrid Water-Scrum-Fall SDLC. Internal use only." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    /* ── BA Handbook extras ── */
+    .phase-timeline { display: flex; flex-direction: column; gap: 0; margin: 20px 0; }
+
+    .pt-row {
+      display: flex; align-items: stretch; gap: 0;
+    }
+
+    .pt-spine {
+      display: flex; flex-direction: column; align-items: center;
+      width: 48px; flex-shrink: 0;
+    }
+
+    .pt-dot {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; flex-shrink: 0;
+      border: 2px solid var(--border-default);
+      background: var(--bg-overlay);
+      color: var(--text-muted);
+      z-index: 1;
+    }
+
+    .pt-dot.done   { background: var(--status-green-bg);  border-color: var(--status-green);  color: var(--status-green); }
+    .pt-dot.active { background: var(--accent-dim);        border-color: var(--accent);         color: var(--accent-bright); box-shadow: 0 0 10px var(--accent-glow); }
+    .pt-dot.waterfall { background: var(--status-blue-bg); border-color: var(--status-blue); color: var(--status-blue); }
+    .pt-dot.agile  { background: var(--status-green-bg);  border-color: var(--status-green);  color: var(--status-green); }
+    .pt-dot.hybrid { background: var(--status-purple-bg); border-color: var(--status-purple); color: var(--status-purple); }
+
+    .pt-line {
+      width: 2px; flex: 1; min-height: 24px;
+      background: var(--border-default);
+      margin: 2px auto;
+    }
+
+    .pt-content {
+      flex: 1; padding: 0 0 24px 16px;
+    }
+
+    .pt-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 10px; padding-top: 4px;
+    }
+
+    .pt-phase-label {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--text-muted);
+    }
+
+    .pt-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+
+    .pt-sdlc-tag {
+      font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+      text-transform: uppercase; letter-spacing: 0.04em; margin-left: auto;
+    }
+
+    .pt-body { font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; }
+
+    .pt-outputs {
+      margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px;
+    }
+
+    .pt-output-tag {
+      font-size: 10px; font-weight: 600; padding: 3px 8px;
+      border-radius: 20px; background: var(--bg-active);
+      border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+    }
+
+    /* Role interaction map */
+    .role-map {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 10px; margin: 14px 0;
+    }
+
+    .role-node {
+      background: var(--bg-overlay); border: 1px solid var(--border-default);
+      border-radius: var(--radius-md); padding: 14px;
+      text-align: center; transition: border-color 0.15s;
+    }
+
+    .role-node:hover { border-color: var(--accent); }
+    .role-node.center-ba {
+      grid-column: 2; grid-row: 1;
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .role-node-icon { font-size: 22px; margin-bottom: 6px; }
+    .role-node-name { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+    .role-node-desc { font-size: 10.5px; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
+
+    /* Flow arrows */
+    .role-flow { font-size: 11px; color: var(--text-muted); margin: 4px 0; }
+
+    /* Tech matrix table */
+    .tech-matrix { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .tech-matrix th {
+      background: var(--bg-base); text-align: left;
+      padding: 8px 12px; font-size: 10px; font-weight: 700;
+      color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em;
+      border-bottom: 1px solid var(--border-default);
+    }
+    .tech-matrix td {
+      padding: 9px 12px; border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary); vertical-align: top; line-height: 1.6;
+    }
+    .tech-matrix tr:last-child td { border-bottom: none; }
+    .tech-matrix tr:hover td { background: var(--bg-hover); }
+    .tech-matrix td:first-child { font-weight: 700; color: var(--text-primary); white-space: nowrap; }
+
+    /* Quality gate checklist */
+    .qg-list { list-style: none; margin: 10px 0; }
+    .qg-list li {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 6px 0; border-bottom: 1px solid var(--border-subtle);
+      font-size: 12.5px; color: var(--text-secondary);
+    }
+    .qg-list li:last-child { border-bottom: none; }
+    .qg-check {
+      width: 16px; height: 16px; border-radius: 4px;
+      border: 1.5px solid var(--border-strong);
+      flex-shrink: 0; margin-top: 2px;
+      background: var(--bg-overlay);
+    }
+
+    /* Anti-pattern items */
+    .ap-item {
+      display: flex; gap: 8px; align-items: flex-start;
+      padding: 7px 0; border-bottom: 1px solid var(--border-subtle);
+      font-size: 12.5px;
+    }
+    .ap-item:last-child { border-bottom: none; }
+    .ap-bad  { color: var(--status-red); }
+    .ap-good { color: var(--status-green); }
+
+    /* SMART/INVEST badges */
+    .invest-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    }
+    .invest-card {
+      background: var(--bg-overlay); border: 1px solid var(--border-default);
+      border-radius: var(--radius-md); padding: 12px;
+      text-align: center;
+    }
+    .invest-letter {
+      font-size: 22px; font-weight: 800; color: var(--accent-bright);
+      letter-spacing: -0.02em;
+    }
+    .invest-word {
+      font-size: 10.5px; font-weight: 700; color: var(--text-primary);
+      margin: 2px 0;
+    }
+    .invest-desc { font-size: 10px; color: var(--text-muted); line-height: 1.4; }
+
+    /* Document ownership colors */
+    .own-author  { color: var(--accent-bright); font-weight: 700; }
+    .own-contrib { color: var(--status-yellow); font-weight: 600; }
+    .own-review  { color: var(--status-blue); font-weight: 600; }
+
+    @media (max-width: 900px) {
+      .role-map { grid-template-columns: 1fr 1fr; }
+      .role-node.center-ba { grid-column: 1 / -1; }
+      .invest-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN OVERLAY ===== -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-icon">🏦</div>
+      <div class="login-brand">VietBank</div>
+      <div class="login-sub">BA Project Handbook · Confidential</div>
+    </div>
+    <form id="login-form" onsubmit="handleLogin(event)" autocomplete="off">
+      <div class="login-field">
+        <label for="login-username">Username</label>
+        <input type="text" id="login-username" placeholder="Enter username" autocomplete="username" required />
+      </div>
+      <div class="login-field">
+        <label for="login-password">Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="login-password" placeholder="Enter password" autocomplete="current-password" required />
+          <button type="button" class="pw-toggle" onclick="togglePw()" aria-label="Show password">👁</button>
+        </div>
+      </div>
+      <div id="login-error" class="login-error"></div>
+      <button type="submit" class="login-btn" id="login-submit">Sign in</button>
+    </form>
+    <div class="login-footer">🔒 Authorized Personnel Only · SBV Circular 09/2020/TT-NHNN</div>
+  </div>
+</div>
+
+<!-- Mobile toggle -->
+<button id="sidebar-toggle" aria-label="Toggle navigation" onclick="toggleSidebar()">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- ===== SIDEBAR ===== -->
+<aside id="sidebar">
+  <div class="sidebar-top">
+    <div class="bank-badge">
+      <div class="bank-icon">📋</div>
+      <div>
+        <div class="bank-title">BA Project Handbook</div>
+        <div class="bank-sub">BABOK® v3 · Hybrid SDLC</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-section-label">Overview</div>
+  <nav id="sidebar-nav">
+    <a href="#section-intro" id="nav-intro" onclick="setActive(this)">
+      <span class="nav-icon">🏠</span> Introduction
+    </a>
+    <a href="#section-workflow" id="nav-workflow" onclick="setActive(this)">
+      <span class="nav-icon">🔄</span> BA Workflow
+    </a>
+    <a href="#section-roles" id="nav-roles" onclick="setActive(this)">
+      <span class="nav-icon">👥</span> Role Interactions
+    </a>
+  </nav>
+
+  <div class="sidebar-section-label">BA Phases</div>
+  <nav id="sidebar-nav">
+    <a href="#section-p0" id="nav-p0" onclick="setActive(this)">
+      <span class="nav-icon">🚀</span> Phase 0 — Initiation
+    </a>
+    <a href="#section-p1" id="nav-p1" onclick="setActive(this)">
+      <span class="nav-icon">🎙️</span> Phase 1 — Elicitation
+    </a>
+    <a href="#section-p2" id="nav-p2" onclick="setActive(this)">
+      <span class="nav-icon">📐</span> Phase 2 — Analysis
+    </a>
+    <a href="#section-p3" id="nav-p3" onclick="setActive(this)">
+      <span class="nav-icon">✅</span> Phase 3 — Validation
+    </a>
+    <a href="#section-p4" id="nav-p4" onclick="setActive(this)">
+      <span class="nav-icon">🏗️</span> Phase 4 — Design Support
+    </a>
+    <a href="#section-p5" id="nav-p5" onclick="setActive(this)">
+      <span class="nav-icon">⚙️</span> Phase 5 — Implementation
+    </a>
+    <a href="#section-p6" id="nav-p6" onclick="setActive(this)">
+      <span class="nav-icon">🧪</span> Phase 6 — UAT
+    </a>
+    <a href="#section-p7" id="nav-p7" onclick="setActive(this)">
+      <span class="nav-icon">🚢</span> Phase 7 — Release
+    </a>
+    <a href="#section-p8" id="nav-p8" onclick="setActive(this)">
+      <span class="nav-icon">📊</span> Phase 8 — PIR
+    </a>
+  </nav>
+
+  <div class="sidebar-section-label">Reference</div>
+  <nav id="sidebar-nav">
+    <a href="#section-docs" id="nav-docs" onclick="setActive(this)">
+      <span class="nav-icon">📄</span> Document Ownership
+    </a>
+    <a href="#section-techniques" id="nav-techniques" onclick="setActive(this)">
+      <span class="nav-icon">🔧</span> Technique Catalog
+    </a>
+    <a href="#section-nfr" id="nav-nfr" onclick="setActive(this)">
+      <span class="nav-icon">⚡</span> NFR Framework
+    </a>
+    <a href="#section-quality" id="nav-quality" onclick="setActive(this)">
+      <span class="nav-icon">🎯</span> Quality Gates
+    </a>
+    <a href="#section-antipatterns" id="nav-antipatterns" onclick="setActive(this)">
+      <span class="nav-icon">🚫</span> Anti-Patterns
+    </a>
+  </nav>
+
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-compliance">
+    <span class="comp-pill">📘 BABOK® v3</span>
+    <span class="comp-pill">🔀 Hybrid SDLC</span>
+    <span class="comp-pill">🏦 SBV 09/2020</span>
+  </div>
+
+  <div class="sidebar-meta">
+    <strong>Document Info</strong>
+    Version: v1.0 · 2025 Q2<br/>
+    Status: <span style="color:var(--status-yellow)">Draft</span><br/>
+    Owner: BA Lead<br/>
+    <strong>Quick Links</strong>
+    <a href="index.html" style="color:var(--accent-bright);font-size:11px;">← Deployment Runbook</a>
+  </div>
+</aside>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div id="main-content">
+
+  <!-- HERO -->
+  <header class="top-header">
+    <div class="header-eyebrow">📋 Internal Handbook · BABOK® v3 Aligned</div>
+    <h1>Business Analyst<br/><span>Project Implement Handbook</span></h1>
+    <p>
+      A comprehensive guide to the Business Analyst workflow within VietBank's
+      <strong>Hybrid Water-Scrum-Fall</strong> SDLC model. Read by project teams to
+      understand BA responsibilities, deliverables, and collaboration expectations
+      across all implementation phases.
+    </p>
+    <div class="header-pills">
+      <div class="header-pill"><div class="pill-dot" style="background:var(--accent)"></div> BABOK® Guide v3</div>
+      <div class="header-pill"><div class="pill-dot" style="background:var(--status-yellow)"></div> Hybrid Water-Scrum-Fall</div>
+      <div class="header-pill"><div class="pill-dot" style="background:var(--status-green)"></div> 9 BA Phases</div>
+      <div class="header-pill"><div class="pill-dot" style="background:var(--status-blue)"></div> SBV Compliant</div>
+      <div class="header-pill"><div class="pill-dot" style="background:var(--status-red)"></div> INTERNAL USE ONLY</div>
+    </div>
+  </header>
+
+  <main class="content-sections">
+
+    <!-- ══════════════════════════════════════════════
+         SECTION: INTRODUCTION
+    ══════════════════════════════════════════════ -->
+    <section class="section-block" id="section-intro">
+      <div class="section-header">
+        <div class="section-icon">🏠</div>
+        <div>
+          <div class="section-number">Introduction</div>
+          <h2>Purpose & Scope</h2>
+          <div class="sec-sub">Who should read this · What it covers · How to use it</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-body">
+          <div class="card-title">What This Handbook Is</div>
+          <p style="margin-bottom:12px;">
+            This handbook defines the <strong>Business Analyst (BA) workflow</strong> for all software
+            implementation projects at VietBank. It documents BA responsibilities, deliverables,
+            interaction points, and quality gates across every phase of project execution —
+            from initial kickoff through post-implementation review.
+          </p>
+          <p>
+            It is designed to be <strong>read by the entire project team</strong> — not just BAs — so
+            that every stakeholder understands what to expect from the BA function, when to
+            involve them, and how to collaborate effectively.
+          </p>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+        <div class="info-tile">
+          <div class="info-tile-icon">👩‍💼</div>
+          <div class="info-tile-title">Primary Audience</div>
+          <div class="info-tile-desc">Business Analysts · Project Managers · Solution Architects · QA Leads · Product Owners</div>
+        </div>
+        <div class="info-tile">
+          <div class="info-tile-icon">📖</div>
+          <div class="info-tile-title">Secondary Audience</div>
+          <div class="info-tile-desc">Development Teams · Business Stakeholders · Compliance Officers · UX/UI Designers</div>
+        </div>
+        <div class="info-tile">
+          <div class="info-tile-icon">⚙️</div>
+          <div class="info-tile-title">Governing Framework</div>
+          <div class="info-tile-desc">BABOK® Guide v3 · IEEE 830 · ISO/IEC 25010 · SBV Circular 09/2020/TT-NHNN</div>
+        </div>
+      </div>
+
+      <div class="alert alert-info" style="margin-top:16px;">
+        <span class="alert-icon">ℹ️</span>
+        <div>
+          <strong>How to use this handbook:</strong> Navigate by phase using the sidebar.
+          Each phase states its trigger, activities, primary outputs, and how it contributes to
+          adjacent team workflows (PM, SA, QA, DEV). Cross-reference with the
+          <a href="index.html" style="color:var(--status-blue)">Deployment Runbook</a> for
+          pre-production and go-live procedures.
+        </div>
+      </div>
+
+      <div class="alert alert-warning" style="margin-top:8px;">
+        <span class="alert-icon">⚠️</span>
+        <div>
+          <strong>SDLC Context:</strong> VietBank operates a <strong>Hybrid Water-Scrum-Fall</strong> model.
+          Core/stable requirements follow Waterfall governance (formal sign-off, RTM, CCB).
+          Evolving feature requirements are managed as an Agile backlog within sprints.
+          This handbook covers both tracks — look for the
+          <span style="color:var(--status-blue);font-weight:700;">[WATERFALL]</span>
+          <span style="color:var(--status-green);font-weight:700;">[AGILE]</span>
+          <span style="color:var(--status-purple);font-weight:700;">[HYBRID]</span> tags in each phase.
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION: BA WORKFLOW OVERVIEW
+    ══════════════════════════════════════════════ -->
+    <section class="section-block" id="section-workflow">
+      <div class="section-header">
+        <div class="section-icon">🔄</div>
+        <div>
+          <div class="section-number">BA Workflow</div>
+          <h2>End-to-End BA Lifecycle</h2>
+          <div class="sec-sub">9 phases from initiation to post-implementation review</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-body">
+          <div class="card-title">Requirements Type Hierarchy (BABOK)</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;">
+            <div style="background:var(--status-blue-bg);border:1px solid rgba(96,165,250,0.3);border-radius:var(--radius-md);padding:14px;text-align:center;">
+              <div style="font-size:11px;font-weight:700;color:var(--status-blue);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;">Business Requirements</div>
+              <div style="font-size:10.5px;color:var(--text-muted);">WHY — Goals, KPIs, Outcomes</div>
+            </div>
+            <div style="background:var(--status-purple-bg);border:1px solid rgba(167,139,250,0.3);border-radius:var(--radius-md);padding:14px;text-align:center;">
+              <div style="font-size:11px;font-weight:700;color:var(--status-purple);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;">Stakeholder Requirements</div>
+              <div style="font-size:10.5px;color:var(--text-muted);">WHO — Needs per user group</div>
+            </div>
+            <div style="background:var(--accent-dim);border:1px solid rgba(124,92,252,0.3);border-radius:var(--radius-md);padding:14px;text-align:center;">
+              <div style="font-size:11px;font-weight:700;color:var(--accent-bright);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;">Solution Requirements</div>
+              <div style="font-size:10.5px;color:var(--text-muted);">WHAT — System capabilities</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px;">
+            <div></div>
+            <div style="background:var(--status-green-bg);border:1px solid rgba(52,211,153,0.3);border-radius:var(--radius-md);padding:12px;text-align:center;">
+              <div style="font-size:11px;font-weight:700;color:var(--status-green);margin-bottom:3px;">Functional</div>
+              <div style="font-size:10px;color:var(--text-muted);">What the system does</div>
+            </div>
+            <div style="background:var(--status-yellow-bg);border:1px solid rgba(251,191,36,0.3);border-radius:var(--radius-md);padding:12px;text-align:center;">
+              <div style="font-size:11px;font-weight:700;color:var(--status-yellow);margin-bottom:3px;">Non-Functional</div>
+              <div style="font-size:10px;color:var(--text-muted);">How the system performs</div>
+            </div>
+          </div>
+          <div style="margin-top:10px;padding:10px 14px;background:var(--bg-base);border:1px solid var(--border-subtle);border-radius:var(--radius-md);">
+            <span style="font-size:11px;font-weight:700;color:var(--status-red);">Transition Requirements</span>
+            <span style="font-size:11px;color:var(--text-muted);margin-left:8px;">HOW to move As-Is → To-Be (migration, training, cutover)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase timeline -->
+      <div class="phase-timeline">
+
+        <!-- P0 -->
+        <div class="pt-row">
+          <div class="pt-spine"><div class="pt-dot waterfall">0</div><div class="pt-line"></div></div>
+          <div class="pt-content">
+            <div class="pt-header">
+              <div>
+                <div class="pt-phase-label">Phase 0</div>
+                <div class="pt-title">Project Initiation & Planning</div>
+              </div>
+              <span class="pt-sdlc-tag" style="background:var(--status-blue-bg);color:var(--status-blue);">WATERFALL</span>
+            </div>
+            <div class="pt-body"><strong>Trigger:</strong> Project kickoff or new feature request received. BA reviews Charter/SOW, builds Stakeholder Register, defines Business Need Statement.</div>
+            <div class="pt-outputs">
+              <span class="pt-output-tag">Stakeholder Register</span>
+              <span class="pt-output-tag">BA Plan</span>
+              <span class="pt-output-tag">Business Need Statement</span>
+              <span class="pt-output-tag">Compliance Scope Checklist</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- P1 -->
+        <div class="pt-row">
+          <div class="pt-spine"><div class="pt-dot active">1</div><div class="pt-line"></div></div>
+          <div class="pt-content">
+            <div class="pt-header">
+              <div>
+                <div class="pt-phase-label">Phase 1</div>
+                <div class="pt-title">Elicitation & Collaboration</div>
+              </div>
+              <span class="pt-sdlc-tag" style="background:var(--status-purple-bg);color:var(--status-purple);">HYBRID</span>
+            </div>
+            <div class="pt-body"><strong>Trigger:</strong> Stakeholders identified; BA plan approved. Execute elicitation (interviews, workshops, observation). Classify inputs post-session.</div>
+            <div class="pt-outputs">
+              <span class="pt-output-tag">Elicitation Notes</span>
+              <span class="pt-output-tag">Assumptions Log</span>
+              <span class="pt-output-tag">Interview Summaries</span>
+              <span class="pt-output-tag">Risk Register input</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- P2 -->
+        <div class="pt-row">
+          <div class="pt-spine"><div class="pt-dot waterfall">2</div><div class="pt-line"></div></div>
+          <div class="pt-content">
+            <div class="pt-header">
+              <div>
+                <div class="pt-phase-label">Phase 2</div>
+                <div class="pt-title">Requirements Analysis & Design Definition</div>
+              </div>
+              <span class="pt-sdlc-tag" style="background:var(--status-purple-bg);color:var(--status-purple);">HYBRID</span>
+            </div>
+            <div class="pt-body"><strong>Trigger:</strong> Sufficient elicitation data collected. Model As-Is/To-Be (BPMN 2.0), write requirements (SMART), build RTM, prioritize (MoSCoW/WSJF).</div>
+            <div class="pt-outputs">
+              <span class="pt-output-tag">BRD / SRS</span>
+              <span class="pt-output-tag">User Stories + AC</span>
+              <span class="pt-output-tag">Process Flow Diagrams</span>
+              <span class="pt-output-tag">RTM</span>
+              <span class="pt-output-tag">Business Rules Catalog</span>
+              <span class="pt-output-tag">Data Dictionary</span>
+              <span class="pt-output-tag">NFR Specification</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- P3 -->
+        <div class="pt-row">
+          <div class="pt-spine"><div class="pt-dot waterfall">3</div><div class="pt-line"></div></div>
+          <div class="pt-content">
+            <div class="pt-header">
+              <div>
+                <div class="pt-phase-label">Phase 3</div>
+                <div class="pt-title">Requirements Validation & Approval</div>
+              </div>
+              <span class="pt-sdlc-tag" style="background:var(--status-blue-bg);color:var(--status-blue);">WATERFALL GATE</span>
+            </div>
+            <div class="pt-body"><strong>Trigger:</strong> Requirements in draft-complete state. Formal review with Stakeholders, PM, SA, QA, Compliance. Obtain written sign-off. Baseline requirements.</div>
+            <div class="pt-outputs">
+              <span class="pt-output-tag">Sign-off Record</span>
+              <span class="pt-output-tag">Baselined BRD/SRS</span>
+              <span class="pt-output-tag">Approved Backlog</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- P4 -->
+        <div class="pt-row">
+          <div class="pt-spine"><div class="pt-dot agile">4</div><div class="pt-line"></div></div>
+          <div class="pt-content">
+            <div class="pt-header">
+              <div>
+                <div class="pt-phase-label">Phase 4</div>
+                <div class="pt-title">Solution Evaluation & Design Support</div>
+              </div>
+              <span class="pt-sdlc-tag" style="background:var(--status-green-bg);color:var(--status-green);">AGILE</span>
+            </div>
+            <div class="pt-body"><strong>Trigger:</strong> SA/DEV begins solution design or sprint planning. BA participates in design reviews, reviews wireframes, validates data mapping, writes interface specs.</div>
+            <div class="pt-outputs">
+              <span class="pt-output-tag">UI Review Feedback</span>
+              <span class="pt-output-tag">Interface Spec</span>
+              <span class="pt-output-tag">Data Mapping</span>
+              <span class="pt-output-tag">Trade-off Analysis</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- P5 -->
+        <div class="pt-row">
+          <div class="pt-spine"><div class="pt-dot agile">5</div><div class="pt-line"></div></div>
+          <div class="pt-content">
+            <div class="pt-header">
+              <div>
+                <div class="pt-phase-label">Phase 5</div>
+                <div class="pt-title">Implementation Support</div>
+              </div>
+              <span class="pt-sdlc-tag" style="background:var(--status-green-bg);color:var(--status-green);">AGILE SPRINT</span>
+            </div>
+            <div class="pt-body"><strong>Trigger:</strong> Development sprint/coding begins. BA serves as requirements clarifier, manages Change Requests (impact analysis + CCB approval), supports defect triage.</div>
+            <div class="pt-outputs">
+              <span class="pt-output-tag">Change Request Log</span>
+              <span class="pt-output-tag">Impact Assessments</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- P6 -->
+        <div class="pt-row">
+          <div class="pt-spine"><div class="pt-dot waterfall">6</div><div class="pt-line"></div></div>
+          <div class="pt-content">
+            <div class="pt-header">
+              <div>
+                <div class="pt-phase-label">Phase 6</div>
+                <div class="pt-title">User Acceptance Testing (UAT)</div>
+              </div>
+              <span class="pt-sdlc-tag" style="background:var(--status-blue-bg);color:var(--status-blue);">WATERFALL GATE</span>
+            </div>
+            <div class="pt-body"><strong>Trigger:</strong> DEV declares feature/release ready for UAT. BA prepares UAT Plan, creates test scripts from acceptance criteria, coordinates execution, tracks defects.</div>
+            <div class="pt-outputs">
+              <span class="pt-output-tag">UAT Plan</span>
+              <span class="pt-output-tag">UAT Scripts</span>
+              <span class="pt-output-tag">UAT Defect Log</span>
+              <span class="pt-output-tag">UAT Sign-off</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- P7 -->
+        <div class="pt-row">
+          <div class="pt-spine"><div class="pt-dot waterfall">7</div><div class="pt-line"></div></div>
+          <div class="pt-content">
+            <div class="pt-header">
+              <div>
+                <div class="pt-phase-label">Phase 7</div>
+                <div class="pt-title">Release & Transition</div>
+              </div>
+              <span class="pt-sdlc-tag" style="background:var(--status-blue-bg);color:var(--status-blue);">WATERFALL</span>
+            </div>
+            <div class="pt-body"><strong>Trigger:</strong> UAT passed; release approved by CAB. BA contributes to Release Notes (business impact), validates training materials, defines rollback criteria.</div>
+            <div class="pt-outputs">
+              <span class="pt-output-tag">Release Notes (business)</span>
+              <span class="pt-output-tag">User Guide</span>
+              <span class="pt-output-tag">Training Deck</span>
+              <span class="pt-output-tag">Cutover Plan input</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- P8 -->
+        <div class="pt-row">
+          <div class="pt-spine"><div class="pt-dot done">8</div></div>
+          <div class="pt-content">
+            <div class="pt-header">
+              <div>
+                <div class="pt-phase-label">Phase 8</div>
+                <div class="pt-title">Post-Implementation Review</div>
+              </div>
+              <span class="pt-sdlc-tag" style="background:var(--status-green-bg);color:var(--status-green);">REVIEW</span>
+            </div>
+            <div class="pt-body"><strong>Trigger:</strong> Stabilization ends (typically 2–4 weeks post go-live). BA measures original KPIs/OKRs (Benefits Realization), documents lessons learned, seeds next backlog.</div>
+            <div class="pt-outputs">
+              <span class="pt-output-tag">PIR Report</span>
+              <span class="pt-output-tag">Lessons Learned Log</span>
+              <span class="pt-output-tag">Updated Process Docs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION: ROLE INTERACTIONS
+    ══════════════════════════════════════════════ -->
+    <section class="section-block" id="section-roles">
+      <div class="section-header">
+        <div class="section-icon">👥</div>
+        <div>
+          <div class="section-number">Collaboration Model</div>
+          <h2>BA Role Interaction Map</h2>
+          <div class="sec-sub">Who the BA works with and what flows between roles</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">BA as Central Collaboration Hub</div>
+          <div class="role-map">
+            <div class="role-node">
+              <div class="role-node-icon">🏢</div>
+              <div class="role-node-name">Business Stakeholders</div>
+              <div class="role-node-desc">→ BA: Needs, feedback, approvals<br/>← BA: User Stories, Sign-off requests</div>
+            </div>
+            <div class="role-node center-ba">
+              <div class="role-node-icon">📋</div>
+              <div class="role-node-name">Business Analyst</div>
+              <div class="role-node-desc">Central coordination point. Translates business needs into structured requirements and facilitates cross-team collaboration.</div>
+            </div>
+            <div class="role-node">
+              <div class="role-node-icon">📅</div>
+              <div class="role-node-name">Project Manager</div>
+              <div class="role-node-desc">→ BA: Priorities, timeline, constraints<br/>← BA: Scope, CR impact, Sign-offs</div>
+            </div>
+            <div class="role-node">
+              <div class="role-node-icon">🏗️</div>
+              <div class="role-node-name">Solution Architect</div>
+              <div class="role-node-desc">→ BA: Design feedback, feasibility<br/>← BA: BRD, Use Cases, Interface Spec</div>
+            </div>
+            <div class="role-node">
+              <div class="role-node-icon">💻</div>
+              <div class="role-node-name">Development Team</div>
+              <div class="role-node-desc">→ BA: Questions, Change Requests<br/>← BA: User Stories, Acceptance Criteria</div>
+            </div>
+            <div class="role-node">
+              <div class="role-node-icon">🧪</div>
+              <div class="role-node-name">QA Team</div>
+              <div class="role-node-desc">→ BA: Defects, requirement gaps<br/>← BA: RTM, AC, UAT Scripts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info" style="margin-top:14px;">
+        <span class="alert-icon">🔑</span>
+        <div>
+          <strong>Key BA Principle:</strong> The BA <em>facilitates</em> — does not just transcribe stakeholder conversations. The BA <em>bridges</em> — does not act as a message relay between teams. The BA <em>represents all stakeholders fairly</em> — does not advocate for any single party's preference over project business objectives.
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ══════════════════════════════════════════════
+         PHASES 0-8 DETAILED
+    ══════════════════════════════════════════════ -->
+
+    <!-- PHASE 0 -->
+    <section class="section-block" id="section-p0">
+      <div class="section-header">
+        <div class="section-icon">🚀</div>
+        <div>
+          <div class="section-number">Phase 0 · Waterfall Gate · Trigger: Project Kickoff</div>
+          <h2>Project Initiation & Planning</h2>
+          <div class="sec-sub">Stakeholder Register · BA Plan · Business Need Statement · Compliance Scope</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="true" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-blue-bg);color:var(--status-blue);">Activities</span><h3>What the BA Does in Phase 0</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body open">
+            <div class="accordion-content">
+              <ol class="step-cl">
+                <li><span class="step-num">1</span><div><strong>Review Project Charter, SOW, or Business Case</strong> — understand scope boundaries, budget envelope, strategic alignment.</div></li>
+                <li><span class="step-num">2</span><div><strong>Build Stakeholder Register</strong> — for each stakeholder: role, influence level, interest level, communication preference, RACI position.</div></li>
+                <li><span class="step-num">3</span><div><strong>Conduct initial interviews</strong> — capture objectives, KPIs/OKRs, pain points. Do not propose solutions yet.</div></li>
+                <li><span class="step-num">4</span><div><strong>Define Business Need Statement</strong>:<br/>
+                  <span class="mono">"The [stakeholder] needs [capability] in order to achieve [outcome] because [rationale]."</span></div></li>
+                <li><span class="step-num">5</span><div><strong>Establish BA Plan</strong> — elicitation methods, tools, review cadence, deliverables per phase, RACI for BA outputs.</div></li>
+                <li><span class="step-num">6</span><div><strong>Identify compliance/regulatory scope</strong> early — SBV Circular 09/2020, Decree 13/2023, PCI-DSS if card data in scope.</div></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-green-bg);color:var(--status-green);">Outputs</span><h3>Primary Deliverables</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <ul class="output-list">
+                <li><span class="output-icon">📋</span><div><strong>Stakeholder Register</strong> — role mapping with RACI and communication preferences</div></li>
+                <li><span class="output-icon">📌</span><div><strong>Business Need Statement</strong> — one-sentence framing of the core problem/opportunity</div></li>
+                <li><span class="output-icon">📅</span><div><strong>BA Plan</strong> — elicitation schedule, tool selection, deliverable owners, review cadence</div></li>
+                <li><span class="output-icon">⚖️</span><div><strong>Compliance Scope Checklist</strong> — regulations in scope, regulatory contact, key obligations</div></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--accent-dim);color:var(--accent-bright);">Contributions</span><h3>How Phase 0 Feeds Other Teams</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <div class="role-card"><div class="role-avatar">📅</div><div><div class="role-name">→ Project Manager</div><div class="role-desc">Stakeholder Register + Business Need Statement validate the Project Charter's objectives.</div></div></div>
+              <div class="role-card"><div class="role-avatar">⚖️</div><div><div class="role-name">→ Compliance Officer</div><div class="role-desc">Compliance Scope Checklist initiates early regulatory review, preventing late-stage rework.</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASE 1 -->
+    <section class="section-block" id="section-p1">
+      <div class="section-header">
+        <div class="section-icon">🎙️</div>
+        <div>
+          <div class="section-number">Phase 1 · Hybrid · Trigger: BA Plan Approved</div>
+          <h2>Elicitation & Collaboration</h2>
+          <div class="sec-sub">Interviews · Workshops · Observation · Assumptions Log</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="true" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-blue-bg);color:var(--status-blue);">Activities</span><h3>Elicitation Execution</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body open">
+            <div class="accordion-content">
+              <ol class="step-cl">
+                <li><span class="step-num">1</span><div><strong>Select elicitation technique</strong> based on stakeholder type, information complexity, and SDLC phase (see Technique Catalog).</div></li>
+                <li><span class="step-num">2</span><div><strong>Capture raw notes without interpretation</strong> during sessions. Separate observation from inference.</div></li>
+                <li><span class="step-num">3</span><div><strong>Classify inputs post-session</strong> into: Requirements / Constraints / Assumptions / Risks / Questions-to-follow-up.</div></li>
+                <li><span class="step-num">4</span><div><strong>Confirm captured information</strong> with stakeholders — replay what you heard before moving to analysis.</div></li>
+                <li><span class="step-num">5</span><div><strong>In Hybrid SDLC</strong> — Phase 1 is continuous during Agile sprint cycles for evolving requirements; for core Waterfall scope it is a discrete, time-boxed activity.</div></li>
+              </ol>
+              <div class="alert alert-danger" style="margin-top:14px;">
+                <span class="alert-icon">🚫</span>
+                <div><strong>Anti-patterns to avoid in Phase 1:</strong><br/>
+                  ❌ Leading questions ("You want X, right?") &nbsp;·&nbsp;
+                  ❌ Solution-first framing (redirect to the problem) &nbsp;·&nbsp;
+                  ❌ Relying on loudest stakeholder only &nbsp;·&nbsp;
+                  ❌ Skipping confirmation of captured information
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-green-bg);color:var(--status-green);">Outputs</span><h3>Primary Deliverables</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <ul class="output-list">
+                <li><span class="output-icon">📝</span><div><strong>Elicitation Notes</strong> — raw, uninterpreted session notes with date, attendees, method used</div></li>
+                <li><span class="output-icon">❓</span><div><strong>Assumptions & Constraints Log</strong> — explicitly documented, owner-assigned, reviewed at Phase 3</div></li>
+                <li><span class="output-icon">📊</span><div><strong>Interview Summaries</strong> — stakeholder-confirmed summaries of key insights per session</div></li>
+                <li><span class="output-icon">⚠️</span><div><strong>Risk Register input</strong> — business risks surfaced during elicitation, fed to PM Risk Register</div></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASE 2 -->
+    <section class="section-block" id="section-p2">
+      <div class="section-header">
+        <div class="section-icon">📐</div>
+        <div>
+          <div class="section-number">Phase 2 · Hybrid · Trigger: Sufficient Elicitation Data</div>
+          <h2>Requirements Analysis & Design Definition</h2>
+          <div class="sec-sub">BRD · SRS · User Stories · RTM · Business Rules · NFR Spec</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="true" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-blue-bg);color:var(--status-blue);">Activities</span><h3>Analysis & Modeling</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body open">
+            <div class="accordion-content">
+              <ol class="step-cl">
+                <li><span class="step-num">1</span><div><strong>Classify by BABOK type</strong> — Business / Stakeholder / Solution (Functional + Non-Functional) / Transition.</div></li>
+                <li><span class="step-num">2</span><div><strong>Model As-Is and To-Be</strong> using:
+                  <ul class="duty-list" style="margin-top:6px;">
+                    <li>BPMN 2.0 — business processes</li>
+                    <li>Use Case Diagrams / User Story Maps — scope</li>
+                    <li>DFD / ERD — data flows and entities</li>
+                    <li>State Transition Diagrams — workflow status</li>
+                  </ul>
+                </div></li>
+                <li><span class="step-num">3</span><div><strong>Define Business Rules separately</strong> from functional requirements — avoid mixing rule logic with system behavior descriptions.</div></li>
+                <li><span class="step-num">4</span><div><strong>Specify NFRs</strong> using ISO/IEC 25010 — every NFR must be measurable (see NFR Framework section).</div></li>
+                <li><span class="step-num">5</span><div><strong>Write in SDLC-appropriate format</strong>:
+                  <ul class="duty-list" style="margin-top:6px;">
+                    <li><span class="mono">[WATERFALL]</span> — Shall-statements in BRD/SRS with unique IDs</li>
+                    <li><span class="mono">[AGILE]</span> — User Stories: "As a [role] I want [goal] so that [benefit]" with GWT acceptance criteria</li>
+                  </ul>
+                </div></li>
+                <li><span class="step-num">6</span><div><strong>Prioritize</strong> using explicit framework — MoSCoW for Waterfall scope lock; WSJF for Agile backlog. Document the choice in BA Plan.</div></li>
+                <li><span class="step-num">7</span><div><strong>Build and maintain RTM</strong> — links: Business Requirement → Solution Requirement → Test Case → Defect.</div></li>
+                <li><span class="step-num">8</span><div><strong>Validate against SMART + INVEST criteria</strong> — see Quality Gates section.</div></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-green-bg);color:var(--status-green);">Outputs</span><h3>Primary Deliverables</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <ul class="output-list">
+                <li><span class="output-icon">📘</span><div><strong>BRD / SRS</strong> — formal requirements document (Waterfall) or living specification</div></li>
+                <li><span class="output-icon">📝</span><div><strong>User Stories with Acceptance Criteria</strong> — GWT format, backlog-ready</div></li>
+                <li><span class="output-icon">🔀</span><div><strong>Process Flow Diagrams (As-Is / To-Be)</strong> — BPMN 2.0 notation</div></li>
+                <li><span class="output-icon">📊</span><div><strong>Requirements Traceability Matrix (RTM)</strong> — BR → FR → TC linkage</div></li>
+                <li><span class="output-icon">📖</span><div><strong>Data Dictionary & Business Rules Catalog</strong> — canonical definitions, rule owners</div></li>
+                <li><span class="output-icon">⚡</span><div><strong>NFR Specification</strong> — measurable non-functional requirements per ISO 25010</div></li>
+                <li><span class="output-icon">🎯</span><div><strong>Prioritized Backlog</strong> — ordered by chosen prioritization framework</div></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASE 3 -->
+    <section class="section-block" id="section-p3">
+      <div class="section-header">
+        <div class="section-icon">✅</div>
+        <div>
+          <div class="section-number">Phase 3 · Waterfall Gate · Trigger: Draft-Complete Requirements</div>
+          <h2>Requirements Validation & Approval</h2>
+          <div class="sec-sub">Formal sign-off · Baseline · Change Request process activation</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="true" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-blue-bg);color:var(--status-blue);">Activities</span><h3>Review & Baseline Process</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body open">
+            <div class="accordion-content">
+              <ol class="step-cl">
+                <li><span class="step-num">1</span><div><strong>Conduct Requirements Review meeting</strong> — mandatory attendees: Business Stakeholders, PM, SA, QA Lead, Compliance Officer (if in scope).</div></li>
+                <li><span class="step-num">2</span><div><strong>Log all feedback</strong>, update documents accordingly within agreed SLA.</div></li>
+                <li><span class="step-num">3</span><div><strong>Obtain formal written sign-off</strong> — verbal approval is NOT acceptable for formal baseline.</div></li>
+                <li><span class="step-num">4</span><div><strong>Baseline requirements</strong> — all subsequent changes route through the <strong>Change Request process</strong> (managed by BA, approved by CCB).</div></li>
+                <li><span class="step-num">5</span><div><strong>Publish to shared repository</strong> — notify all consuming teams (DEV, QA, SA) of the baselined version.</div></li>
+              </ol>
+              <div class="alert alert-danger" style="margin-top:14px;">
+                <span class="alert-icon">🚫</span>
+                <div><strong>Critical rule:</strong> Any scope change after baseline <strong>must</strong> go through the BA for Impact Assessment before PM updates the schedule or SA changes the design. Silent changes to requirements are a project risk.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASES 4-8 condensed for readability -->
+    <section class="section-block" id="section-p4">
+      <div class="section-header">
+        <div class="section-icon">🏗️</div>
+        <div>
+          <div class="section-number">Phase 4 · Agile Sprint · Trigger: SA/DEV Begins Design</div>
+          <h2>Solution Evaluation & Design Support</h2>
+          <div class="sec-sub">Design reviews · Wireframe validation · Interface specs · Data mapping</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-green-bg);color:var(--status-green);">Activities & Outputs</span><h3>BA in Design Phase</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <ol class="step-cl">
+                <li><span class="step-num">1</span><div><strong>Participate in Solution Design Reviews</strong> — verify design satisfies requirements, not just technical elegance.</div></li>
+                <li><span class="step-num">2</span><div><strong>Review UI/UX wireframes and prototypes</strong> against stakeholder expectations. Provide structured feedback referencing specific AC.</div></li>
+                <li><span class="step-num">3</span><div><strong>Validate Data Mapping</strong> for integration/migration features — ensure field mappings match Data Dictionary.</div></li>
+                <li><span class="step-num">4</span><div><strong>Write Interface Specifications / API Requirements</strong> — input/output contracts, error handling, business rules for integrations.</div></li>
+                <li><span class="step-num">5</span><div><strong>Support DEV estimation</strong> — provide business context. BA does not estimate effort but ensures stories are well-understood before Planning Poker.</div></li>
+              </ol>
+              <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                <span class="pt-output-tag">UI Review Feedback</span>
+                <span class="pt-output-tag">Interface Specification</span>
+                <span class="pt-output-tag">Data Mapping Document</span>
+                <span class="pt-output-tag">Solution Trade-off Analysis</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" id="section-p5">
+      <div class="section-header">
+        <div class="section-icon">⚙️</div>
+        <div>
+          <div class="section-number">Phase 5 · Agile Sprint · Trigger: Development Sprint Begins</div>
+          <h2>Implementation Support</h2>
+          <div class="sec-sub">Clarifications · Change Requests · Defect triage · DoR/DoD gates</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-green-bg);color:var(--status-green);">Activities & Outputs</span><h3>BA During Sprints</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <ol class="step-cl">
+                <li><span class="step-num">1</span><div><strong>Primary requirements clarifier</strong> for DEV — respond to clarification requests within agreed SLA (recommended: same business day).</div></li>
+                <li><span class="step-num">2</span><div><strong>Manage Change Requests</strong> — conduct impact analysis (scope/timeline/cost), submit to PM + CCB for approval, update RTM post-approval.</div></li>
+                <li><span class="step-num">3</span><div><strong>Review test cases</strong> against acceptance criteria — ensure QA is testing the right behaviors.</div></li>
+                <li><span class="step-num">4</span><div><strong>Support defect triage</strong> — classify as: Requirement Defect (BA owns) vs. Implementation Defect (DEV owns).</div></li>
+                <li><span class="step-num">5</span><div><strong>Maintain Definition of Ready gate</strong> — no story enters sprint without DoR checklist complete.</div></li>
+              </ol>
+              <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                <span class="pt-output-tag">Change Request Log</span>
+                <span class="pt-output-tag">Impact Assessments</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" id="section-p6">
+      <div class="section-header">
+        <div class="section-icon">🧪</div>
+        <div>
+          <div class="section-number">Phase 6 · Waterfall Gate · Trigger: DEV Declares UAT-Ready</div>
+          <h2>User Acceptance Testing (UAT)</h2>
+          <div class="sec-sub">UAT Plan · Test Scripts · Defect Log · Written Sign-off</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-yellow-bg);color:var(--status-yellow);">Activities & Outputs</span><h3>BA-Led UAT</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <ol class="step-cl">
+                <li><span class="step-num">1</span><div><strong>Prepare UAT Plan</strong> — scope, objectives, entry/exit criteria, schedule, roles.</div></li>
+                <li><span class="step-num">2</span><div><strong>Create UAT Test Scripts</strong> directly from acceptance criteria (GWT format maps 1:1 to test steps).</div></li>
+                <li><span class="step-num">3</span><div><strong>Coordinate and facilitate UAT execution</strong> with business users — BA does not execute tests, business users do.</div></li>
+                <li><span class="step-num">4</span><div><strong>Track and classify UAT defects</strong> — Critical (blocks go-live) / Major (workaround exists) / Minor (cosmetic).</div></li>
+                <li><span class="step-num">5</span><div><strong>Obtain UAT Sign-off</strong> from authorized business stakeholders — must be written, not verbal.</div></li>
+              </ol>
+              <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                <span class="pt-output-tag">UAT Plan</span>
+                <span class="pt-output-tag">UAT Scripts</span>
+                <span class="pt-output-tag">UAT Defect Log</span>
+                <span class="pt-output-tag">UAT Sign-off</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" id="section-p7">
+      <div class="section-header">
+        <div class="section-icon">🚢</div>
+        <div>
+          <div class="section-number">Phase 7 · Waterfall · Trigger: UAT Passed, CAB Approved</div>
+          <h2>Release & Transition</h2>
+          <div class="sec-sub">Release Notes · User Guide · Training · Rollback criteria</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-blue-bg);color:var(--status-blue);">Activities & Outputs</span><h3>BA in Release Phase</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <ol class="step-cl">
+                <li><span class="step-num">1</span><div><strong>Contribute to Release Notes</strong> — write the business impact section (what changed for users, not what changed in code).</div></li>
+                <li><span class="step-num">2</span><div><strong>Validate Training Materials and User Guides</strong> — confirm accuracy against final requirements and UAT-confirmed behaviors.</div></li>
+                <li><span class="step-num">3</span><div><strong>Define rollback/fallback criteria</strong> from a business perspective — what business conditions trigger a rollback decision.</div></li>
+                <li><span class="step-num">4</span><div><strong>Support hypercare period</strong> — available for business user questions in the first 1–2 weeks post go-live.</div></li>
+              </ol>
+              <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                <span class="pt-output-tag">Release Notes (business section)</span>
+                <span class="pt-output-tag">User Guide</span>
+                <span class="pt-output-tag">Training Deck</span>
+                <span class="pt-output-tag">Cutover Plan input</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" id="section-p8">
+      <div class="section-header">
+        <div class="section-icon">📊</div>
+        <div>
+          <div class="section-number">Phase 8 · Review · Trigger: Stabilization Ends (2–4 weeks post go-live)</div>
+          <h2>Post-Implementation Review</h2>
+          <div class="sec-sub">Benefits realization · Lessons learned · Next iteration seeding</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-green-bg);color:var(--status-green);">Activities & Outputs</span><h3>PIR Activities</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <ol class="step-cl">
+                <li><span class="step-num">1</span><div><strong>Benefits Realization Review</strong> — measure original KPIs/OKRs stated in Phase 0. Did the solution achieve what was promised?</div></li>
+                <li><span class="step-num">2</span><div><strong>Document Lessons Learned</strong> — BA perspective: what elicitation techniques worked, what requirement issues emerged late, what to do differently.</div></li>
+                <li><span class="step-num">3</span><div><strong>Update Business Process Documentation</strong> — the To-Be from Phase 2 becomes the new As-Is baseline for future projects.</div></li>
+                <li><span class="step-num">4</span><div><strong>Identify backlog items</strong> for the next iteration — feed into Product Roadmap and seed Phase 0 of next cycle.</div></li>
+              </ol>
+              <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+                <span class="pt-output-tag">PIR Report</span>
+                <span class="pt-output-tag">Lessons Learned Log</span>
+                <span class="pt-output-tag">Updated Process Docs</span>
+                <span class="pt-output-tag">Product Roadmap input</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ══════════════════════════════════════════════
+         DOCUMENT OWNERSHIP MATRIX
+    ══════════════════════════════════════════════ -->
+    <section class="section-block" id="section-docs">
+      <div class="section-header">
+        <div class="section-icon">📄</div>
+        <div>
+          <div class="section-number">Reference</div>
+          <h2>Document Ownership Matrix</h2>
+          <div class="sec-sub">What the BA owns, contributes to, and reviews across all project documents</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <div style="padding:14px 22px 10px;display:flex;gap:16px;font-size:11px;border-bottom:1px solid var(--border-subtle);">
+            <span><span class="own-author">■ Author</span> — BA is primary owner</span>
+            <span><span class="own-contrib">■ Contributor</span> — BA provides input</span>
+            <span><span class="own-review">■ Reviewer</span> — BA reviews, does not own</span>
+          </div>
+          <table class="comp-table">
+            <thead>
+              <tr><th>Document</th><th>BA Role</th><th>Primary Collaborators</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Stakeholder Register</td><td><span class="own-author">Author</span></td><td>PM</td></tr>
+              <tr><td>BA Plan</td><td><span class="own-author">Author</span></td><td>PM</td></tr>
+              <tr><td>BRD / SRS</td><td><span class="own-author">Author</span></td><td>Stakeholders, SA, PM</td></tr>
+              <tr><td>User Stories & Acceptance Criteria</td><td><span class="own-author">Author</span></td><td>PO, DEV, QA</td></tr>
+              <tr><td>Process Flow (As-Is / To-Be, BPMN)</td><td><span class="own-author">Author</span></td><td>SMEs, SA</td></tr>
+              <tr><td>Use Case Specification</td><td><span class="own-author">Author</span></td><td>SA, DEV</td></tr>
+              <tr><td>Data Dictionary & Glossary</td><td><span class="own-author">Author</span></td><td>SA, DBA</td></tr>
+              <tr><td>Business Rules Catalog</td><td><span class="own-author">Author</span></td><td>Stakeholders, SA</td></tr>
+              <tr><td>NFR Specification</td><td><span class="own-author">Author</span></td><td>SA, Security, Ops</td></tr>
+              <tr><td>Requirements Traceability Matrix (RTM)</td><td><span class="own-author">Author</span></td><td>QA, PM</td></tr>
+              <tr><td>Interface / Integration Specification</td><td><span class="own-author">Author</span></td><td>SA, DEV</td></tr>
+              <tr><td>Data Mapping Document</td><td><span class="own-author">Author</span></td><td>SA, DBA</td></tr>
+              <tr><td>UAT Plan & Scripts</td><td><span class="own-author">Author</span></td><td>QA, Business Users</td></tr>
+              <tr><td>Change Request Log</td><td><span class="own-author">Author</span></td><td>PM</td></tr>
+              <tr><td>Compliance Scope Checklist</td><td><span class="own-author">Author</span></td><td>Compliance, Legal</td></tr>
+              <tr><td>Post-Implementation Review (PIR)</td><td><span class="own-author">Author</span></td><td>PM, Stakeholders</td></tr>
+              <tr><td>Project Charter</td><td><span class="own-contrib">Contributor</span></td><td>PM, Sponsor</td></tr>
+              <tr><td>Risk Register</td><td><span class="own-contrib">Contributor</span></td><td>PM</td></tr>
+              <tr><td>Project Schedule</td><td><span class="own-contrib">Contributor</span></td><td>PM</td></tr>
+              <tr><td>Release Notes</td><td><span class="own-contrib">Contributor</span></td><td>PM, DEV</td></tr>
+              <tr><td>Go-Live Checklist</td><td><span class="own-contrib">Contributor</span></td><td>PM</td></tr>
+              <tr><td>System Design (HLD/LLD)</td><td><span class="own-review">Reviewer</span></td><td>SA</td></tr>
+              <tr><td>Test Plan & Test Cases</td><td><span class="own-review">Reviewer</span></td><td>QA</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ══════════════════════════════════════════════
+         BA TECHNIQUE CATALOG
+    ══════════════════════════════════════════════ -->
+    <section class="section-block" id="section-techniques">
+      <div class="section-header">
+        <div class="section-icon">🔧</div>
+        <div>
+          <div class="section-number">Reference</div>
+          <h2>BA Technique Catalog</h2>
+          <div class="sec-sub">When to use which BA technique — mapped to purpose</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <table class="tech-matrix">
+            <thead>
+              <tr><th>Purpose</th><th>Recommended Techniques</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Problem Identification</td><td>5 Whys · Fishbone (Ishikawa) · Root Cause Analysis</td></tr>
+              <tr><td>Stakeholder Analysis</td><td>Stakeholder Matrix (Power/Interest) · Onion Diagram · RACI</td></tr>
+              <tr><td>Elicitation</td><td>Interviews · Workshops · Observation · Document Analysis · Survey · Focus Groups · Prototyping</td></tr>
+              <tr><td>Process Modeling</td><td>BPMN 2.0 · Swimlane Diagrams · Value Stream Mapping</td></tr>
+              <tr><td>Scope Definition</td><td>Context Diagram · Use Case Diagram · Feature Decomposition</td></tr>
+              <tr><td>Requirements Writing</td><td>User Stories + GWT Acceptance Criteria · Shall-statements (IEEE 830) · Specification by Example</td></tr>
+              <tr><td>Data Modeling</td><td>ERD · Data Flow Diagram (DFD) · Data Dictionary</td></tr>
+              <tr><td>Behavior Modeling</td><td>State Transition Diagram · Sequence Diagram · Activity Diagram</td></tr>
+              <tr><td>Decision Rules</td><td>Decision Table · Decision Tree · Business Rules Catalog</td></tr>
+              <tr><td>Prioritization</td><td>MoSCoW · Kano · WSJF · 100-Dollar Test · RICE · Value vs. Effort Matrix</td></tr>
+              <tr><td>Risk & Assumptions</td><td>Assumption Log · SWOT · Risk Register contribution</td></tr>
+              <tr><td>Validation</td><td>Walkthrough · Inspection · Prototyping · Acceptance Criteria Review</td></tr>
+              <tr><td>Gap Analysis</td><td>As-Is vs. To-Be comparison · Fit-Gap Matrix</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ══════════════════════════════════════════════
+         NFR FRAMEWORK
+    ══════════════════════════════════════════════ -->
+    <section class="section-block" id="section-nfr">
+      <div class="section-header">
+        <div class="section-icon">⚡</div>
+        <div>
+          <div class="section-number">Reference · ISO/IEC 25010</div>
+          <h2>Non-Functional Requirements Framework</h2>
+          <div class="sec-sub">Every NFR must be measurable — no ambiguous language</div>
+        </div>
+      </div>
+
+      <div class="alert alert-warning">
+        <span class="alert-icon">📐</span>
+        <div><strong>Rule:</strong> Every NFR must be <strong>measurable</strong>.
+          ❌ <em>"The system shall be fast"</em> is not an NFR.
+          ✅ <em>"P95 response time shall be &lt; 500ms at 1,000 concurrent users"</em> is an NFR.
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;" class="grid-2col">
+        <div class="callout-box" style="background:var(--status-blue-bg);border-color:rgba(96,165,250,0.3);">
+          <div class="callout-title" style="color:var(--status-blue);">⚡ Performance Efficiency</div>
+          <div class="callout-body" style="color:var(--text-secondary);">Response time · Throughput · Resource utilization<br/><em style="font-size:11px;">e.g., P95 API response &lt; 500ms, 99.5% uptime SLA</em></div>
+        </div>
+        <div class="callout-box" style="background:var(--status-red-bg);border-color:rgba(248,113,113,0.3);">
+          <div class="callout-title" style="color:var(--status-red);">🔒 Security</div>
+          <div class="callout-body" style="color:var(--text-secondary);">Authentication · Authorization · Encryption at rest/transit · Audit logging<br/><em style="font-size:11px;">Must comply with SBV 09/2020, Decree 13/2023</em></div>
+        </div>
+        <div class="callout-box" style="background:var(--status-green-bg);border-color:rgba(52,211,153,0.3);">
+          <div class="callout-title" style="color:var(--status-green);">🛡️ Reliability</div>
+          <div class="callout-body" style="color:var(--text-secondary);">Availability (SLA%) · Fault tolerance · RTO / RPO<br/><em style="font-size:11px;">e.g., RTO &lt; 4h, RPO &lt; 1h for core banking systems</em></div>
+        </div>
+        <div class="callout-box" style="background:var(--status-yellow-bg);border-color:rgba(251,191,36,0.3);">
+          <div class="callout-title" style="color:var(--status-yellow);">♿ Usability</div>
+          <div class="callout-body" style="color:var(--text-secondary);">Learnability · Accessibility (WCAG 2.1 AA minimum) · UX<br/><em style="font-size:11px;">e.g., new user completes core task within 3 minutes unassisted</em></div>
+        </div>
+        <div class="callout-box" style="background:var(--status-purple-bg);border-color:rgba(167,139,250,0.3);">
+          <div class="callout-title" style="color:var(--status-purple);">🔧 Maintainability</div>
+          <div class="callout-body" style="color:var(--text-secondary);">Modularity · Testability · Modifiability<br/><em style="font-size:11px;">e.g., new feature deployable without system restart</em></div>
+        </div>
+        <div class="callout-box" style="background:var(--bg-overlay);border-color:var(--border-default);">
+          <div class="callout-title" style="color:var(--text-secondary);">🔄 Compatibility</div>
+          <div class="callout-body" style="color:var(--text-secondary);">Co-existence · Interoperability with other systems<br/><em style="font-size:11px;">e.g., compatible with CBS v14.x, ISO 20022 message format</em></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ══════════════════════════════════════════════
+         QUALITY GATES
+    ══════════════════════════════════════════════ -->
+    <section class="section-block" id="section-quality">
+      <div class="section-header">
+        <div class="section-icon">🎯</div>
+        <div>
+          <div class="section-number">Quality Gates</div>
+          <h2>SMART · INVEST · DoR · DoD</h2>
+          <div class="sec-sub">Criteria that BA validates before requirements progress to next phase</div>
+        </div>
+      </div>
+
+      <!-- SMART -->
+      <div class="card" style="margin-bottom:14px;">
+        <div class="card-body">
+          <div class="card-title">SMART — Business Requirements Quality</div>
+          <div class="invest-grid">
+            <div class="invest-card"><div class="invest-letter">S</div><div class="invest-word">Specific</div><div class="invest-desc">Clearly defined, no ambiguity</div></div>
+            <div class="invest-card"><div class="invest-letter">M</div><div class="invest-word">Measurable</div><div class="invest-desc">Has quantifiable success criteria</div></div>
+            <div class="invest-card"><div class="invest-letter">A</div><div class="invest-word">Achievable</div><div class="invest-desc">Technically and operationally feasible</div></div>
+            <div class="invest-card"><div class="invest-letter">R</div><div class="invest-word">Relevant</div><div class="invest-desc">Aligned to business objectives</div></div>
+            <div class="invest-card"><div class="invest-letter">T</div><div class="invest-word">Time-bound</div><div class="invest-desc">Has a defined delivery timeframe</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INVEST -->
+      <div class="card" style="margin-bottom:14px;">
+        <div class="card-body">
+          <div class="card-title">INVEST — User Story Quality</div>
+          <div class="invest-grid">
+            <div class="invest-card"><div class="invest-letter">I</div><div class="invest-word">Independent</div><div class="invest-desc">No hidden dependency on another story</div></div>
+            <div class="invest-card"><div class="invest-letter">N</div><div class="invest-word">Negotiable</div><div class="invest-desc">Details can evolve through conversation</div></div>
+            <div class="invest-card"><div class="invest-letter">V</div><div class="invest-word">Valuable</div><div class="invest-desc">Delivers value to user or business</div></div>
+            <div class="invest-card"><div class="invest-letter">E</div><div class="invest-word">Estimable</div><div class="invest-desc">DEV can size it with confidence</div></div>
+            <div class="invest-card"><div class="invest-letter">S</div><div class="invest-word">Small</div><div class="invest-desc">Completable within one sprint</div></div>
+            <div class="invest-card"><div class="invest-letter">T</div><div class="invest-word">Testable</div><div class="invest-desc">Has clear acceptance criteria</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DoR & DoD -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;" class="grid-2col">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title">✅ Definition of Ready (DoR)</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">Gate before story enters sprint</div>
+            <ul class="qg-list">
+              <li><div class="qg-check"></div>User story follows "As a… I want… so that…" format</li>
+              <li><div class="qg-check"></div>Acceptance criteria in Given-When-Then format</li>
+              <li><div class="qg-check"></div>Dependencies identified and resolved or sequenced</li>
+              <li><div class="qg-check"></div>UX mockups attached (if UI story)</li>
+              <li><div class="qg-check"></div>NFRs specified or referenced</li>
+              <li><div class="qg-check"></div>Business rules referenced</li>
+              <li><div class="qg-check"></div>Estimated by DEV team</li>
+              <li><div class="qg-check"></div>Small enough to complete within one sprint</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title">🏁 Definition of Done (DoD)</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;">Gate before story is accepted</div>
+            <ul class="qg-list">
+              <li><div class="qg-check"></div>All acceptance criteria met and verified</li>
+              <li><div class="qg-check"></div>Code peer-reviewed and merged</li>
+              <li><div class="qg-check"></div>Unit and integration tests pass</li>
+              <li><div class="qg-check"></div>QA testing complete, no Critical/Major defects open</li>
+              <li><div class="qg-check"></div>NFR validation passed (perf, security, accessibility)</li>
+              <li><div class="qg-check"></div>Documentation updated (user guide, API docs)</li>
+              <li><div class="qg-check"></div>Demonstrated and accepted by PO/Business</li>
+              <li><div class="qg-check"></div>Deployed to staging environment</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ══════════════════════════════════════════════
+         ANTI-PATTERNS
+    ══════════════════════════════════════════════ -->
+    <section class="section-block" id="section-antipatterns">
+      <div class="section-header">
+        <div class="section-icon">🚫</div>
+        <div>
+          <div class="section-number">Reference</div>
+          <h2>Anti-Patterns — What Not to Do</h2>
+          <div class="sec-sub">Common BA mistakes and the correct approach</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="true" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-red-bg);color:var(--status-red);">Elicitation</span><h3>Elicitation Anti-Patterns</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body open">
+            <div class="accordion-content">
+              <div class="ap-item"><span class="ap-bad">❌</span><div>Ask <strong>leading questions</strong> — "You want the button on the top right, correct?" Instead: ask open-ended, neutral questions.</div></div>
+              <div class="ap-item"><span class="ap-bad">❌</span><div>Accept <strong>solutions as requirements</strong> — "I need a dropdown with 5 items." <span class="ap-good">✅ Redirect: "Before the solution, can you describe the business problem it solves?"</span></div></div>
+              <div class="ap-item"><span class="ap-bad">❌</span><div>Rely only on <strong>the loudest stakeholder</strong> — actively seek silent voices who may represent critical user groups.</div></div>
+              <div class="ap-item"><span class="ap-bad">❌</span><div>Skip <strong>confirmation</strong> of captured information — always replay what you heard before moving to analysis.</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-red-bg);color:var(--status-red);">Analysis</span><h3>Analysis Anti-Patterns</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <div class="ap-item"><span class="ap-bad">❌</span><div>Write requirements that <strong>dictate implementation</strong> — "using Kafka for event streaming." Requirements say WHAT, not HOW.</div></div>
+              <div class="ap-item"><span class="ap-bad">❌</span><div>Mix <strong>multiple requirements in one statement</strong> — use "and" as a smell indicator. Split compound requirements.</div></div>
+              <div class="ap-item"><span class="ap-bad">❌</span><div>Use <strong>ambiguous words</strong>: "user-friendly", "fast", "robust", "intuitive", "seamless." Every adjective must be measurable.</div></div>
+              <div class="ap-item"><span class="ap-bad">❌</span><div>Skip NFRs "<em>because they'll figure it out in design</em>" — undocumented NFRs become the most expensive defects to fix late.</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+            <div class="acc-left"><span class="acc-tag" style="background:var(--status-red-bg);color:var(--status-red);">Sign-off & CR</span><h3>Sign-off & Change Request Anti-Patterns</h3></div>
+            <div class="accordion-chevron">▾</div>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-content">
+              <div class="ap-item"><span class="ap-bad">❌</span><div>Accept <strong>verbal approval</strong> for formal baseline — written sign-off is mandatory for Waterfall and Hybrid core scope.</div></div>
+              <div class="ap-item"><span class="ap-bad">❌</span><div>Allow <strong>scope changes without Change Request process</strong> post-baseline — every change needs impact assessment before implementation.</div></div>
+              <div class="ap-item"><span class="ap-bad">❌</span><div>Update requirements <strong>silently</strong> without notifying QA and updating the RTM — test coverage gaps will follow.</div></div>
+              <div class="ap-item"><span class="ap-bad">❌</span><div>Act as a <strong>message relay</strong> between stakeholders and DEV — facilitate the conversation directly, don't play telephone.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    🏦 VietBank · BA Project Implement Handbook v1.0 · Internal Use Only · Classification: CONFIDENTIAL<br/>
+    Aligned with BABOK® Guide v3 · Hybrid Water-Scrum-Fall SDLC · SBV Circular 09/2020/TT-NHNN · © 2025
+  </footer>
+</div>
+
+<!-- Logout button -->
+<button id="logout-btn" onclick="handleLogout()" title="Sign out">
+  <span>⎋</span> Sign out
+</button>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
