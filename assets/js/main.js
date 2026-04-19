@@ -1,5 +1,5 @@
 /**
- * main.js — VietBank Deployment Runbook
+ * main.js - Handbook deployment pages
  * Handles: authentication, sidebar navigation, accordion, role tabs, DoD checklist
  */
 
@@ -8,49 +8,91 @@
 // Credentials are intentionally client-side for this static
 // internal tool. Not suitable for high-security prod systems.
 // ============================================================
-const AUTH_KEY  = 'vb_runbook_auth';
+const AUTH_KEY = 'handbook_auth';
 const AUTH_USER = 'admin';
 const AUTH_PASS = 'Admin@!23';
+const AUTH_TTL_MS = 24 * 60 * 60 * 1000;
 
-/** Check session on every page load */
-(function initAuth() {
-  if (sessionStorage.getItem(AUTH_KEY) !== 'authenticated') {
-    // Lock the page — hide all app content
-    document.body.classList.add('locked');
-  } else {
-    // Already logged in — hide login overlay
-    const overlay = document.getElementById('login-overlay');
-    if (overlay) overlay.classList.add('hidden');
+function clearAuth() {
+  localStorage.removeItem(AUTH_KEY);
+}
+
+function getAuthRecord() {
+  try {
+    const raw = localStorage.getItem(AUTH_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    clearAuth();
+    return null;
   }
+}
+
+function isAuthenticated() {
+  const record = getAuthRecord();
+  if (!record || record.status !== 'authenticated' || typeof record.authenticatedAt !== 'number') {
+    clearAuth();
+    return false;
+  }
+
+  if (Date.now() - record.authenticatedAt > AUTH_TTL_MS) {
+    clearAuth();
+    return false;
+  }
+
+  return true;
+}
+
+function persistAuth() {
+  localStorage.setItem(
+    AUTH_KEY,
+    JSON.stringify({
+      status: 'authenticated',
+      authenticatedAt: Date.now(),
+    })
+  );
+}
+
+function syncAuthState() {
+  const overlay = document.getElementById('login-overlay');
+
+  if (isAuthenticated()) {
+    document.body.classList.remove('locked');
+    if (overlay) overlay.classList.add('hidden');
+    return;
+  }
+
+  document.body.classList.add('locked');
+  if (overlay) overlay.classList.remove('hidden');
+}
+
+/** Check auth state on every page load */
+(function initAuth() {
+  syncAuthState();
 })();
 
 /** Handle login form submit */
 function handleLogin(e) {
   e.preventDefault();
-  const username  = document.getElementById('login-username').value.trim();
-  const password  = document.getElementById('login-password').value;
-  const errorBox  = document.getElementById('login-error');
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errorBox = document.getElementById('login-error');
   const submitBtn = document.getElementById('login-submit');
 
-  // Loading state
   submitBtn.disabled = true;
   submitBtn.classList.add('loading');
   errorBox.classList.remove('show');
 
-  // Small delay for UX feel
   setTimeout(() => {
     if (username === AUTH_USER && password === AUTH_PASS) {
-      // ✅ Correct — grant access
-      sessionStorage.setItem(AUTH_KEY, 'authenticated');
-      document.body.classList.remove('locked');
-      document.getElementById('login-overlay').classList.add('hidden');
+      persistAuth();
+      syncAuthState();
     } else {
-      // ❌ Wrong credentials
-      errorBox.textContent = '⚠️ Incorrect username or password. Please try again.';
+      errorBox.textContent = 'Incorrect username or password. Please try again.';
       errorBox.classList.add('show');
       document.getElementById('login-password').value = '';
       document.getElementById('login-password').focus();
     }
+
     submitBtn.disabled = false;
     submitBtn.classList.remove('loading');
   }, 400);
@@ -58,9 +100,8 @@ function handleLogin(e) {
 
 /** Handle logout */
 function handleLogout() {
-  sessionStorage.removeItem(AUTH_KEY);
-  document.body.classList.add('locked');
-  document.getElementById('login-overlay').classList.remove('hidden');
+  clearAuth();
+  syncAuthState();
   document.getElementById('login-username').value = '';
   document.getElementById('login-password').value = '';
   document.getElementById('login-error').classList.remove('show');
@@ -68,15 +109,15 @@ function handleLogout() {
 
 /** Toggle password visibility */
 function togglePw() {
-  const input  = document.getElementById('login-password');
+  const input = document.getElementById('login-password');
   const toggle = document.querySelector('.pw-toggle');
   const isHidden = input.type === 'password';
-  input.type      = isHidden ? 'text' : 'password';
-  toggle.textContent = isHidden ? '🙈' : '👁';
+  input.type = isHidden ? 'text' : 'password';
+  toggle.textContent = isHidden ? 'Hide' : 'Show';
 }
 
 // ============================================================
-// SIDEBAR — Mobile toggle
+// SIDEBAR - Mobile toggle
 // ============================================================
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
@@ -85,7 +126,7 @@ function toggleSidebar() {
 // Close sidebar when clicking outside on mobile
 document.addEventListener('click', function (e) {
   const sidebar = document.getElementById('sidebar');
-  const toggle  = document.getElementById('sidebar-toggle');
+  const toggle = document.getElementById('sidebar-toggle');
   if (
     window.innerWidth <= 900 &&
     sidebar.classList.contains('open') &&
@@ -97,26 +138,25 @@ document.addEventListener('click', function (e) {
 });
 
 // ============================================================
-// SIDEBAR NAV — Active link on click
+// SIDEBAR NAV - Active link on click
 // ============================================================
 function setActive(el) {
   document.querySelectorAll('#sidebar-nav a').forEach(a => a.classList.remove('active'));
   el.classList.add('active');
-  // Close sidebar on mobile after clicking a nav link
   if (window.innerWidth <= 900) {
     document.getElementById('sidebar').classList.remove('open');
   }
 }
 
 // ============================================================
-// SIDEBAR NAV — Auto-highlight on scroll (Intersection Observer)
+// SIDEBAR NAV - Auto-highlight on scroll
 // ============================================================
 const navMap = {
   'section-governance': 'nav-governance',
-  'section-phase1':     'nav-phase1',
-  'section-phase2':     'nav-phase2',
-  'section-phase3':     'nav-phase3',
-  'section-phase4':     'nav-phase4',
+  'section-phase1': 'nav-phase1',
+  'section-phase2': 'nav-phase2',
+  'section-phase3': 'nav-phase3',
+  'section-phase4': 'nav-phase4',
 };
 
 const sectionObserver = new IntersectionObserver(
@@ -141,7 +181,7 @@ Object.keys(navMap).forEach(id => {
 });
 
 // ============================================================
-// ACCORDION — Expand / collapse
+// ACCORDION - Expand / collapse
 // ============================================================
 function toggleAccordion(btn) {
   const expanded = btn.getAttribute('aria-expanded') === 'true';
@@ -150,27 +190,27 @@ function toggleAccordion(btn) {
 }
 
 // ============================================================
-// ROLE TABS — Switch perspective panels
+// ROLE TABS - Switch perspective panels
 // ============================================================
 function switchRole(role) {
-  // Deactivate all tabs
   document.querySelectorAll('.role-tab').forEach(t => {
     t.classList.remove('active');
     t.setAttribute('aria-selected', 'false');
   });
 
-  // Deactivate all panels
   document.querySelectorAll('.role-panel').forEach(p => p.classList.remove('active'));
 
-  // Activate selected tab and panel
-  const tab   = document.getElementById('tab-'   + role);
+  const tab = document.getElementById('tab-' + role);
   const panel = document.getElementById('panel-' + role);
-  if (tab)   { tab.classList.add('active');   tab.setAttribute('aria-selected', 'true'); }
-  if (panel) { panel.classList.add('active'); }
+  if (tab) {
+    tab.classList.add('active');
+    tab.setAttribute('aria-selected', 'true');
+  }
+  if (panel) panel.classList.add('active');
 }
 
 // ============================================================
-// DOD CHECKLIST — Toggle items & update progress bar
+// DOD CHECKLIST - Toggle items & update progress bar
 // ============================================================
 function toggleDod(item) {
   item.classList.toggle('checked');
@@ -178,7 +218,6 @@ function toggleDod(item) {
   updateDod();
 }
 
-// Keyboard accessibility for DoD items
 document.querySelectorAll('.dod-item').forEach(item => {
   item.addEventListener('keydown', e => {
     if (e.key === ' ' || e.key === 'Enter') {
@@ -189,20 +228,20 @@ document.querySelectorAll('.dod-item').forEach(item => {
 });
 
 function updateDod() {
-  const items   = document.querySelectorAll('.dod-item');
+  const items = document.querySelectorAll('.dod-item');
   const checked = document.querySelectorAll('.dod-item.checked').length;
-  const total   = items.length;
-  const pct     = Math.round((checked / total) * 100);
+  const total = items.length;
+  const pct = Math.round((checked / total) * 100);
 
   document.getElementById('dod-count').textContent = `${checked} / ${total} complete`;
-  document.getElementById('dod-bar').style.width   = `${pct}%`;
+  document.getElementById('dod-bar').style.width = `${pct}%`;
 
   const banner = document.getElementById('dod-complete-banner');
   banner.classList.toggle('show', checked === total);
 }
 
 // ============================================================
-// RESPONSIVE — 2-column grid fallback for narrow viewports
+// RESPONSIVE - 2-column grid fallback for narrow viewports
 // ============================================================
 function applyGrids() {
   document.querySelectorAll('.grid-2col').forEach(g => {
@@ -212,3 +251,6 @@ function applyGrids() {
 
 applyGrids();
 window.addEventListener('resize', applyGrids);
+window.addEventListener('storage', e => {
+  if (e.key === AUTH_KEY) syncAuthState();
+});

@@ -1,4 +1,4 @@
-# 🏦 VietBank — Interactive Deployment Runbook
+# 🏦 Handbook — Interactive Deployment Runbook
 
 > **Version:** v2.4 · 2025 Q2  
 > **Classification:** INTERNAL USE ONLY — CONFIDENTIAL  
