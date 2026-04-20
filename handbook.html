@@ -294,6 +294,8 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
       <span class="sb-icon-sm">🏠</span> Home & Pipeline</a>
     <a href="#" data-sec="sec0" onclick="showSec('sec0',this);return false">
       <span class="sb-icon-sm">📖</span> 0. How to Use</a>
+    <a href="#" data-sec="secpm" onclick="showSec('secpm',this);return false">
+      <span class="sb-icon-sm">PM</span> PM Core Governance</a>
   </nav>
 
   <div class="sb-label">Phases</div>
@@ -424,6 +426,11 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
         <div class="tile-title">Quality Gates</div>
         <div class="tile-desc">DoR, Sprint DoD, Release DoD — checklists for every gate.</div>
       </div>
+      <div class="tile" onclick="showSec('secpm')" style="cursor:pointer">
+        <div class="tile-icon">PM</div>
+        <div class="tile-title">PM Core Governance</div>
+        <div class="tile-desc">PMBOK-based process groups, governance, risk, change, and project controls.</div>
+      </div>
       <div class="tile" onclick="showSec('sec4')" style="cursor:pointer">
         <div class="tile-icon">🚀</div>
         <div class="tile-title">Go-to-Market</div>
@@ -449,6 +456,7 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
     <div class="card"><div class="card-body">
       <div class="card-title">Who Should Read This</div>
       <div class="tiles" style="margin:0">
+        <div class="tile"><div class="tile-icon">PM</div><div class="tile-title">Project Managers</div><div class="tile-desc">PM Core Governance, Sections 1â€“6, 7, 9 â€” charters, baselines, risk, status, closure</div></div>
         <div class="tile"><div class="tile-icon">👩‍💼</div><div class="tile-title">Executives & Sponsors</div><div class="tile-desc">Sections 1, 4, 5, 7 — governance, GTM, closure, RACI</div></div>
         <div class="tile"><div class="tile-icon">📋</div><div class="tile-title">BAs & POs</div><div class="tile-desc">Sections 2, 3.2 (→ BA Workflow), 3.6, 3.8, 7</div></div>
         <div class="tile"><div class="tile-icon">💻</div><div class="tile-title">Developers</div><div class="tile-desc">Sections 3.4, 3.5, 3.6, 3.7, 3.8, 10</div></div>
@@ -465,6 +473,7 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
       <table class="hb-table">
         <thead><tr><th>Topic</th><th>Source of Truth</th><th>Handbook Role</th></tr></thead>
         <tbody>
+          <tr><td>Project governance, PM workflow, baselines, risk, change, reporting, closure controls</td><td><strong>This Handbook</strong></td><td>Core governance layer across all phases</td></tr>
           <tr><td>BA process, BRD/FRD, BA ceremonies</td><td><a href="ba-handbook.html" target="_blank">BA Working Flow ↗</a></td><td>Summary + deep link (no duplication)</td></tr>
           <tr><td>Deployment steps, release checklist, CAB, rollback</td><td><a href="index.html" target="_blank">Deployment Runbook ↗</a></td><td>Summary + deep link (no duplication)</td></tr>
           <tr><td>Everything else</td><td><strong>This Handbook</strong></td><td>Full content</td></tr>
@@ -475,6 +484,107 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
 </div>
 
 <!-- ════════════════════════════════════════════
+<!-- PM CORE GOVERNANCE -->
+<div class="section" id="sec-secpm" data-search="PM core governance PMBOK process groups knowledge areas change control risk management status reporting steering committee tailoring">
+  <div class="breadcrumb">Handbook <span>&rsaquo;</span> PM Core Governance</div>
+  <div class="hb-content">
+    <div class="sec-head"><div class="sec-icon">PM</div><div><div class="sec-num">Core Layer</div><h2>PM Core Governance</h2><div class="sec-sub">Project controls and governance that wrap the full lifecycle without replacing BA or deployment specialist flows</div></div></div>
+
+    <p style="margin-bottom:20px"><strong>Purpose:</strong> Make Project Management the governance spine of the handbook. The PM owns integration, baselines, stakeholder governance, risk, change, reporting, escalation, and closure discipline across every phase.</p>
+
+    <div class="callout c-info"><span class="callout-icon">i</span><div><strong>Non-replacement rule:</strong> BA Working Flow remains the source of truth for requirements content, business rules, and acceptance criteria. Deployment Runbook remains the source of truth for CAB operations, rollback, and production deployment mechanics. PM governs the cross-phase control layer around both.</div></div>
+
+    <div class="tiles">
+      <div class="tile"><div class="tile-icon">1</div><div class="tile-title">Initiating</div><div class="tile-desc">Project Charter, Stakeholder Register, kickoff, tailoring decision, assumptions, and initial risks.</div></div>
+      <div class="tile"><div class="tile-icon">2</div><div class="tile-title">Planning</div><div class="tile-desc">PM Plan, scope, schedule, cost, quality, resource, communications, procurement, and stakeholder plans.</div></div>
+      <div class="tile"><div class="tile-icon">3</div><div class="tile-title">Executing</div><div class="tile-desc">Direct work, align teams, manage vendors, run governance cadence, and remove blockers.</div></div>
+      <div class="tile"><div class="tile-icon">4</div><div class="tile-title">Monitoring &amp; Control</div><div class="tile-desc">Status, variance, change log, issue log, risk review, decision tracking, and escalation.</div></div>
+      <div class="tile"><div class="tile-icon">5</div><div class="tile-title">Closing</div><div class="tile-desc">Acceptance, closure report, lessons learned, benefits review, archive, and resource release.</div></div>
+    </div>
+
+    <div class="card"><div class="card-body">
+      <div class="card-title">Knowledge Areas Applied in This Handbook</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <span class="chip">Integration</span><span class="chip">Scope</span><span class="chip">Schedule</span><span class="chip">Cost</span><span class="chip">Quality</span><span class="chip">Resources</span><span class="chip">Communications</span><span class="chip">Risk</span><span class="chip">Procurement</span><span class="chip">Stakeholders</span>
+      </div>
+    </div></div>
+
+    <div class="card"><div class="acc-item">
+      <button class="acc-trigger" aria-expanded="true" onclick="toggleAcc(this)"><div class="acc-left"><span class="acc-tag" style="background:var(--status-blue-bg);color:var(--status-blue)">WORKFLOW</span><h3>End-to-End PM Control Model</h3></div><div class="acc-chevron">▾</div></button>
+      <div class="acc-body open"><div class="acc-content">
+        <table class="hb-table">
+          <thead><tr><th>Process Group</th><th>Primary PM Outputs</th><th>Consumed By</th><th>Control Rule</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Initiating</strong></td><td>Project Charter, Stakeholder Register, Kickoff Minutes, Tailoring Decision, Assumption Log</td><td>BA discovery, sponsor, initiative team</td><td>No project work starts without a signed Charter and named PM authority.</td></tr>
+            <tr><td><strong>Planning</strong></td><td>PM Plan, baselines, risk register, RACI, communications plan, escalation matrix</td><td>BA, SA, DEV, QA, Finance, sponsors</td><td>Baselines become the reference point for all changes.</td></tr>
+            <tr><td><strong>Executing</strong></td><td>Work authorization, issue log, stakeholder updates, meeting minutes, vendor coordination</td><td>Delivery teams, vendors, steering</td><td>PM removes blockers and aligns teams; PM does not replace BA or team-level execution roles.</td></tr>
+            <tr><td><strong>Monitoring &amp; Control</strong></td><td>Status reports, executive dashboard, change log, variance pack, decision log</td><td>Sponsor, Steering, CCB, team leads</td><td>Scope, schedule, cost, quality, risk, and resource impact are assessed together, never in isolation.</td></tr>
+            <tr><td><strong>Closing</strong></td><td>Closure document, final report, lessons learned register, resource release memo</td><td>Sponsor, BA, PMO, BAU owner</td><td>No project is complete until formal acceptance, archive, and knowledge transfer are done.</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+    </div></div>
+
+    <div class="card"><div class="acc-item">
+      <button class="acc-trigger" aria-expanded="false" onclick="toggleAcc(this)"><div class="acc-left"><span class="acc-tag" style="background:var(--status-yellow-bg);color:var(--status-yellow)">GOVERNANCE</span><h3>Governance Layers and Change Authority</h3></div><div class="acc-chevron">▾</div></button>
+      <div class="acc-body"><div class="acc-content">
+        <table class="hb-table">
+          <thead><tr><th>Layer</th><th>Typical Members</th><th>Decision Scope</th><th>Cadence</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Executive / Sponsor</strong></td><td>Sponsor, executive stakeholders</td><td>Strategic direction, funding, major scope change, executive escalation</td><td>Monthly or milestone-based</td></tr>
+            <tr><td><strong>Steering Committee</strong></td><td>Sponsor, business owner, IT lead, finance, PM</td><td>Phase gate approval, major changes, contingency use, cross-stream conflict resolution</td><td>Monthly; bi-weekly during critical phases</td></tr>
+            <tr><td><strong>CCB</strong></td><td>PM, BA, SA, QA, finance or business reps as needed</td><td>Impact-based decision on change requests and baseline updates</td><td>Weekly or ad hoc</td></tr>
+            <tr><td><strong>Project Operations</strong></td><td>PM, BA, PO, SA, DEV, QA, DevOps, vendors</td><td>Day-to-day delivery coordination, issue resolution, planning, and reporting</td><td>Daily to weekly</td></tr>
+          </tbody>
+        </table>
+        <div class="callout c-gate" style="margin-top:12px"><span class="callout-icon">!</span><div><strong>Authority thresholds:</strong> PM-only decisions stay within minor variance tolerance. Any baseline scope change, material schedule or cost movement, Red status item, or High / Very High risk goes to CCB or Steering.</div></div>
+      </div></div>
+    </div></div>
+
+    <div class="card"><div class="acc-item">
+      <button class="acc-trigger" aria-expanded="false" onclick="toggleAcc(this)"><div class="acc-left"><span class="acc-tag" style="background:var(--status-red-bg);color:var(--status-red)">CONTROL</span><h3>Risk, Status, and Escalation Rules</h3></div><div class="acc-chevron">▾</div></button>
+      <div class="acc-body"><div class="acc-content">
+        <ul class="checklist">
+          <li>Every status update includes RAG status, accomplishments, forward look, top risks, top issues, change requests, and decisions needed.</li>
+          <li>Every risk includes probability, impact, exposure, owner, trigger, and response strategy.</li>
+          <li>Every change request assesses scope, schedule, cost, quality, risk, and resource impact.</li>
+          <li>Every decision has an owner, deadline, rationale, and status in a decision log.</li>
+          <li>Every escalation states what has been tried, what is blocked, and what decision is needed from the next governance layer.</li>
+          <li>Bad news early: Amber and Red conditions are surfaced as soon as confidence of impact is reasonable.</li>
+        </ul>
+      </div></div>
+    </div></div>
+
+    <div class="card"><div class="acc-item">
+      <button class="acc-trigger" aria-expanded="false" onclick="toggleAcc(this)"><div class="acc-left"><span class="acc-tag" style="background:var(--status-green-bg);color:var(--status-green)">TAILORING</span><h3>SDLC Adaptation Rules</h3></div><div class="acc-chevron">▾</div></button>
+      <div class="acc-body"><div class="acc-content">
+        <table class="hb-table">
+          <thead><tr><th>SDLC</th><th>PM Emphasis</th><th>What Stays True</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Waterfall</strong></td><td>Heavy upfront planning, formal phase gates, tighter baseline control</td><td>PM still owns risk, status, change, stakeholder alignment, and closure.</td></tr>
+            <tr><td><strong>Agile / Scrum</strong></td><td>Release planning, team enablement, stakeholder governance, lighter internal change handling for in-scope backlog shifts</td><td>PM still owns overall schedule, steering reporting, risks, and external dependencies.</td></tr>
+            <tr><td><strong>Kanban</strong></td><td>Flow, WIP, bottleneck removal, lead time transparency</td><td>Governance, escalation, and stakeholder communication still run through the PM layer.</td></tr>
+            <tr><td><strong>SAFe</strong></td><td>Program-level dependency management, PI planning, multi-team governance</td><td>PM principles, reporting discipline, and decision governance remain intact.</td></tr>
+            <tr><td><strong>Hybrid</strong></td><td>Waterfall governance gates wrapped around Agile build and testing cycles</td><td>This handbook defaults here: PM governs the wrapper while BA and delivery specialists own their workstreams.</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+    </div></div>
+
+    <div class="card"><div class="card-body">
+      <div class="card-title">Core Handshakes With Existing Pages</div>
+      <table class="hb-table">
+        <thead><tr><th>Workstream</th><th>Owned by</th><th>PM Core Handshake</th></tr></thead>
+        <tbody>
+          <tr><td>Requirements content, BRD/SRS, business rules, acceptance criteria</td><td><a href="ba-handbook.html" target="_blank">BA Working Flow</a></td><td>PM consumes scope, priority, assumptions, and change impact from BA for baselines, risk, and governance decisions.</td></tr>
+          <tr><td>Release execution, CAB procedure, rollback, promotion to production</td><td><a href="index.html" target="_blank">Deployment Runbook</a></td><td>PM consumes release readiness, schedule impact, approvals, and deployment risk to govern go-live decisions and reporting.</td></tr>
+          <tr><td>Project governance, reporting, baselines, escalation, and closure</td><td><strong>This Handbook</strong></td><td>PM is the default owner unless a specialist workflow explicitly owns the content.</td></tr>
+        </tbody>
+      </table>
+    </div></div>
+  </div>
+</div>
+
      SECTION 1: STRATEGY & PLANNING
 ════════════════════════════════════════════ -->
 <div class="section" id="sec-sec1" data-search="strategy planning long-term annual QBR quarterly business review OKR KPI roadmap budget initiative council">
@@ -482,7 +592,7 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
   <div class="hb-content">
     <div class="sec-head"><div class="sec-icon">🎯</div><div><div class="sec-num">Phase 1</div><h2>Strategy & Planning</h2><div class="sec-sub">Long-Term Planning · Annual Planning · QBR</div></div></div>
 
-    <p style="margin-bottom:20px"><strong>Purpose:</strong> Translate business strategy into a prioritized portfolio of initiatives before any project enters discovery.</p>
+    <p style="margin-bottom:20px"><strong>Purpose:</strong> Translate business strategy into a prioritized portfolio of initiatives before any project enters discovery. PM governance starts here through portfolio controls, decision cadence, budget discipline, and investment prioritization.</p>
 
     <div class="gate-box"><div class="gate-title">Entry Criteria</div>
       <ul class="checklist"><li>Business strategy document approved by Board</li><li>Budget envelope defined for fiscal year</li><li>Initiative Council formed (Head of BU, CTO, CFO, COO)</li></ul>
@@ -528,7 +638,7 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
     </div></div>
 
     <div class="card"><div class="card-body"><div class="card-title">Key Outputs & Artifacts</div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px"><span class="chip">📄 Lean Business Case</span><span class="chip">🗺️ Annual Roadmap</span><span class="chip">💰 Budget Allocation</span><span class="chip">📊 QBR Report</span><span class="chip">📋 Initiative Request</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px"><span class="chip">📄 Lean Business Case</span><span class="chip">🗺️ Annual Roadmap</span><span class="chip">💰 Budget Allocation</span><span class="chip">📊 QBR Report</span><span class="chip">📋 Initiative Request</span><span class="chip">PM Governance Decision Log</span></div>
     </div></div>
 
     <div class="card"><div class="card-body"><div class="card-title">Roles Involved</div>
@@ -551,7 +661,7 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
   <div class="hb-content">
     <div class="sec-head"><div class="sec-icon">🔭</div><div><div class="sec-num">Phase 2</div><h2>Discovery & Project Initiation</h2><div class="sec-sub">From approved initiative to staffed, scoped project</div></div></div>
 
-    <p style="margin-bottom:20px"><strong>Purpose:</strong> Convert an approved initiative into a formally chartered project with defined scope, staffed team, and governance structure.</p>
+    <p style="margin-bottom:20px"><strong>Purpose:</strong> Convert an approved initiative into a formally chartered project with defined scope, staffed team, and governance structure. This is the point where the PM establishes the Charter, tailoring approach, stakeholder model, and control framework.</p>
 
     <div class="gate-box"><div class="gate-title">Entry Criteria</div>
       <ul class="checklist"><li>Initiative approved in Annual Planning / QBR</li><li>Budget allocated (Tờ trình signed)</li><li>Initiative Director assigned</li></ul>
@@ -563,15 +673,16 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
         <li><strong>Stakeholder identification</strong> — map all impacted parties. Build Stakeholder Register with power/interest matrix.</li>
         <li><strong>Problem framing</strong> — conduct discovery workshops with business SMEs. Document current-state pain points and desired outcomes using 5 Whys and Fishbone analysis.</li>
         <li><strong>Scope definition</strong> — produce high-level scope statement. Define what is IN and OUT of scope explicitly.</li>
-        <li><strong>Project Charter</strong> — document objectives, success criteria, constraints, assumptions, high-level timeline, budget, governance structure.</li>
+        <li><strong>Project Charter</strong> — document objectives, success criteria, constraints, assumptions, high-level timeline, budget, governance structure, and PM authority thresholds.</li>
         <li><strong>Team formation</strong> — assemble Initiative Team: PO, BA(s), Tech Lead, Dev team, QA Lead, Scrum Master.</li>
         <li><strong>Kickoff</strong> — all-hands kickoff meeting. Present Charter, introduce team, review timeline, set communication cadence.</li>
         <li><strong>Regulatory screening</strong> — identify applicable regulations (SBV, Decree 13/2023, PCI-DSS). Engage Compliance and Op Risk early.</li>
+        <li><strong>Tailoring decision</strong> — confirm whether the project runs Waterfall, Agile, Kanban, SAFe, or Hybrid, and document what governance practices are mandatory.</li>
       </ol>
     </div></div>
 
     <div class="card"><div class="card-body"><div class="card-title">Key Outputs & Artifacts</div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px"><span class="chip">📄 Project Charter</span><span class="chip">👥 Stakeholder Register</span><span class="chip">📊 Scope Statement</span><span class="chip">🔍 Regulatory Screening</span><span class="chip">📅 High-Level Timeline</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px"><span class="chip">📄 Project Charter</span><span class="chip">👥 Stakeholder Register</span><span class="chip">📊 Scope Statement</span><span class="chip">🔍 Regulatory Screening</span><span class="chip">📅 High-Level Timeline</span><span class="chip">Tailoring Decision</span><span class="chip">Assumption Log</span></div>
     </div></div>
 
     <div class="card"><div class="card-body"><div class="card-title">Roles Involved</div>
@@ -595,6 +706,16 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
     <p style="margin-bottom:20px"><strong>Purpose:</strong> Execute the approved project using the bank's Hybrid SDLC — Waterfall governance gates wrapping Agile sprint execution.</p>
 
     <div class="callout c-info"><span class="callout-icon">ℹ️</span><div>This section is the <strong>parent</strong> for 9 sub-sections. Two sub-sections (3.2 Requirements and 3.9 Release Workflow) link to existing standalone pages and are <strong>not duplicated</strong> here.</div></div>
+
+    <div class="card"><div class="card-body">
+      <div class="card-title">PM Monitoring &amp; Control Overlay</div>
+      <div class="tiles" style="margin:0">
+        <div class="tile"><div class="tile-icon">RAG</div><div class="tile-title">Status &amp; Variance</div><div class="tile-desc">Weekly RAG reporting, milestone tracking, burn-down or critical-path review, and executive visibility.</div></div>
+        <div class="tile"><div class="tile-icon">RISK</div><div class="tile-title">Risk &amp; Issue Control</div><div class="tile-desc">Active risk review, issue ownership, trigger monitoring, and fast escalation for High or Very High exposure.</div></div>
+        <div class="tile"><div class="tile-icon">CR</div><div class="tile-title">Change Control</div><div class="tile-desc">BA clarifications, stakeholder asks, and technical impacts are assessed together before baselines are changed.</div></div>
+        <div class="tile"><div class="tile-icon">SYNC</div><div class="tile-title">Cross-Team Coordination</div><div class="tile-desc">PM aligns BA, SA, DEV, QA, DevOps, vendors, and release stakeholders while preserving each specialist flow.</div></div>
+      </div>
+    </div></div>
 
     <div class="tiles">
       <div class="tile" onclick="showSec('sec3sub')" style="cursor:pointer"><div class="tile-icon">🏗️</div><div class="tile-title">3.1–3.5 Build Phases</div><div class="tile-desc">Discovery, Requirements, Design, Build, Test</div></div>
@@ -906,6 +1027,7 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
         <li><strong>Financial closure</strong> — reconcile budget actuals vs. forecast. Close project cost center.</li>
         <li><strong>Team release</strong> — formally release team members. Conduct 1:1 feedback sessions. Update resource pool.</li>
         <li><strong>Formal sign-off</strong> — Project Sponsor signs closure document confirming project is complete.</li>
+        <li><strong>Vendor and contract closure</strong> — confirm final deliverables, invoices, claims, and contractual obligations are closed.</li>
       </ol>
     </div></div>
 
@@ -983,15 +1105,20 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
           <tr><td>Business case approval</td><td>1. Strategy & Planning</td><td class="raci-a">A</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-i">I</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td class="raci-c">C</td><td class="raci-i">I</td></tr>
           <tr><td>Annual roadmap creation</td><td>1. Strategy & Planning</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-c">C</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td class="raci-i">I</td><td class="raci-c">C</td></tr>
           <tr><td>Project Charter</td><td>2. Discovery & Initiation</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-i">I</td><td>-</td><td class="raci-c">C</td><td>-</td></tr>
+          <tr><td>Project Management Plan &amp; Baselines</td><td>2. Discovery & Initiation</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-c">C</td><td>-</td><td class="raci-c">C</td><td>-</td></tr>
+          <tr><td>Risk Register &amp; response plan</td><td>2. Discovery & Initiation</td><td class="raci-i">I</td><td class="raci-a">A</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-c">C</td><td>-</td><td class="raci-c">C</td><td>-</td></tr>
           <tr><td>Requirements elicitation</td><td>3. SDLC Execution</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-c">C</td><td>-</td><td>-</td><td class="raci-c">C</td><td>-</td></tr>
           <tr><td>Solution design (HLD/LLD)</td><td>3. SDLC Execution</td><td>-</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-r">R</td><td class="raci-a">A</td><td class="raci-c">C</td><td class="raci-i">I</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
           <tr><td>Sprint execution</td><td>3. SDLC Execution</td><td>-</td><td class="raci-i">I</td><td class="raci-a">A</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-r">R</td><td class="raci-r">R</td><td class="raci-r">R</td><td class="raci-r">R</td><td>-</td><td>-</td><td>-</td></tr>
+          <tr><td>Status reporting &amp; steering pack</td><td>3. SDLC Execution</td><td class="raci-i">I</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-i">I</td></tr>
+          <tr><td>Integrated change control</td><td>3. SDLC Execution</td><td class="raci-i">I</td><td class="raci-a">A</td><td class="raci-c">C</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-c">C</td><td>-</td></tr>
           <tr><td>UAT coordination</td><td>3. SDLC Execution</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-a">A</td><td class="raci-r">R</td><td>-</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-r">R</td><td>-</td><td class="raci-i">I</td><td class="raci-c">C</td><td>-</td></tr>
           <tr><td>CAB submission</td><td>3. SDLC Execution</td><td class="raci-i">I</td><td class="raci-a">A</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-c">C</td><td>-</td><td class="raci-r">R</td><td class="raci-a">A</td><td>-</td></tr>
           <tr><td>Production deployment</td><td>3. SDLC Execution</td><td class="raci-i">I</td><td class="raci-a">A</td><td class="raci-i">I</td><td>-</td><td class="raci-c">C</td><td class="raci-r">R</td><td class="raci-r">R</td><td class="raci-c">C</td><td>-</td><td class="raci-r">R</td><td class="raci-i">I</td><td>-</td></tr>
           <tr><td>GTM launch plan</td><td>4. GTM</td><td class="raci-a">A</td><td class="raci-c">C</td><td class="raci-r">R</td><td class="raci-c">C</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td class="raci-c">C</td><td class="raci-r">R</td></tr>
           <tr><td>Marketing campaigns</td><td>4. GTM</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-c">C</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td class="raci-r">R</td></tr>
           <tr><td>PIR / Lessons learned</td><td>5. Closure</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-i">I</td></tr>
+          <tr><td>Project closure report</td><td>5. Closure</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-i">I</td></tr>
           <tr><td>Incident response</td><td>6. Operate</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-i">I</td><td>-</td><td class="raci-c">C</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td>-</td><td class="raci-r">R</td><td class="raci-i">I</td><td>-</td></tr>
         </tbody>
       </table>
@@ -1025,7 +1152,8 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
           <tr><td><strong>CAB</strong></td><td>Change Advisory Board — governance body approving production changes.</td></tr>
           <tr><td><strong>DoD</strong></td><td>Definition of Done — checklist of criteria for story/release completion.</td></tr>
           <tr><td><strong>DoR</strong></td><td>Definition of Ready — checklist of criteria before work enters a sprint.</td></tr>
-          <tr><td><strong>GA</strong></td><td>General Availability — full public/customer-facing launch.</td></tr>
+            <tr><td><strong>GA</strong></td><td>General Availability — full public/customer-facing launch.</td></tr>
+            <tr><td><strong>EVM</strong></td><td>Earned Value Management — method for measuring schedule and cost performance against baseline.</td></tr>
           <tr><td><strong>GTM</strong></td><td>Go-to-Market — strategy and execution plan for commercial launch.</td></tr>
           <tr><td><strong>GWT</strong></td><td>Given-When-Then — format for writing acceptance criteria.</td></tr>
           <tr><td><strong>HLD / LLD</strong></td><td>High-Level Design / Low-Level Design — architecture documentation layers.</td></tr>
@@ -1034,17 +1162,20 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
           <tr><td><strong>OKR</strong></td><td>Objectives and Key Results — goal-setting framework.</td></tr>
           <tr><td><strong>PBR</strong></td><td>Product Backlog Refinement — ceremony to groom upcoming stories.</td></tr>
           <tr><td><strong>PIR</strong></td><td>Post-Implementation Review — evaluation after project/incident closure.</td></tr>
-          <tr><td><strong>PO</strong></td><td>Product Owner — accountable for maximizing product value.</td></tr>
+            <tr><td><strong>PO</strong></td><td>Product Owner — accountable for maximizing product value.</td></tr>
+            <tr><td><strong>RAG</strong></td><td>Red / Amber / Green status indicator used in project reporting.</td></tr>
           <tr><td><strong>RPO / RTO</strong></td><td>Recovery Point Objective / Recovery Time Objective — disaster recovery targets.</td></tr>
           <tr><td><strong>RTM</strong></td><td>Requirements Traceability Matrix — links requirements to tests and defects.</td></tr>
           <tr><td><strong>SA</strong></td><td>Solution Architect — designs the technical solution.</td></tr>
           <tr><td><strong>SAST / DAST</strong></td><td>Static / Dynamic Application Security Testing.</td></tr>
-          <tr><td><strong>SBV</strong></td><td>State Bank of Vietnam — central banking regulator.</td></tr>
+            <tr><td><strong>SBV</strong></td><td>State Bank of Vietnam — central banking regulator.</td></tr>
+            <tr><td><strong>SPI / CPI</strong></td><td>Schedule Performance Index / Cost Performance Index — PM metrics for schedule and cost health.</td></tr>
           <tr><td><strong>SLA / SLO</strong></td><td>Service Level Agreement / Service Level Objective.</td></tr>
           <tr><td><strong>SM</strong></td><td>Scrum Master — facilitates Scrum ceremonies and removes impediments.</td></tr>
           <tr><td><strong>SoS</strong></td><td>Scrum of Scrums — cross-team sync ceremony.</td></tr>
           <tr><td><strong>SRS</strong></td><td>Software Requirements Specification — detailed functional spec.</td></tr>
-          <tr><td><strong>UAT</strong></td><td>User Acceptance Testing — business validation of the solution.</td></tr>
+            <tr><td><strong>UAT</strong></td><td>User Acceptance Testing — business validation of the solution.</td></tr>
+            <tr><td><strong>WBS</strong></td><td>Work Breakdown Structure — decomposition of deliverables into manageable work packages.</td></tr>
           <tr><td><strong>WSJF</strong></td><td>Weighted Shortest Job First — prioritization formula (Cost of Delay ÷ Job Size).</td></tr>
         </tbody>
       </table>
@@ -1067,17 +1198,24 @@ body.locked #sidebar-toggle,body.locked #logout-btn{display:none!important}
           <tr><td>📄 Initiative Request Form</td><td>1. Strategy</td><td>PMO</td><td>Confluence / Word</td></tr>
           <tr><td>📄 Lean Business Case</td><td>1. Strategy</td><td>Initiative Director</td><td>Confluence / PPT</td></tr>
           <tr><td>📄 Project Charter</td><td>2. Initiation</td><td>PM</td><td>Confluence / Word</td></tr>
-          <tr><td>📄 Stakeholder Register</td><td>2. Initiation</td><td>BA</td><td>Excel / Confluence</td></tr>
+          <tr><td>📄 Stakeholder Register</td><td>2. Initiation</td><td>PM + BA</td><td>Excel / Confluence</td></tr>
+          <tr><td>📄 Project Management Plan</td><td>2. Initiation</td><td>PM</td><td>Confluence / Word</td></tr>
+          <tr><td>📄 Scope / Schedule / Cost Baselines</td><td>2. Initiation</td><td>PM</td><td>MS Project / Excel / Confluence</td></tr>
+          <tr><td>📄 Risk Register</td><td>2. Initiation</td><td>PM</td><td>Excel / Confluence</td></tr>
+          <tr><td>📄 Communications Plan &amp; Escalation Matrix</td><td>2. Initiation</td><td>PM</td><td>Confluence / PPT</td></tr>
           <tr><td>📄 BRD / SRS Template</td><td>3. SDLC</td><td>BA</td><td>Confluence / Word</td></tr>
           <tr><td>📄 User Story Template</td><td>3. SDLC</td><td>PO / BA</td><td>Jira</td></tr>
           <tr><td>📄 Architecture Decision Record</td><td>3. SDLC</td><td>SA</td><td>Markdown / Confluence</td></tr>
           <tr><td>📄 Test Plan Template</td><td>3. SDLC</td><td>QA Lead</td><td>Confluence / Word</td></tr>
           <tr><td>📄 UAT Plan & Script Template</td><td>3. SDLC</td><td>BA / QA</td><td>Excel / Confluence</td></tr>
           <tr><td>📄 Change Request Form</td><td>3. SDLC</td><td>BA / PM</td><td>Jira / Confluence</td></tr>
+          <tr><td>📄 Weekly Status Report</td><td>3. SDLC</td><td>PM</td><td>Confluence / PPT / Email</td></tr>
+          <tr><td>📄 Steering Committee Pack</td><td>3. SDLC</td><td>PM</td><td>PPT / Confluence</td></tr>
           <tr><td>📄 Release Notes Template</td><td>3. SDLC</td><td>PM / RM</td><td>Confluence</td></tr>
           <tr><td>📄 GTM Launch Plan</td><td>4. GTM</td><td>Product Marketing</td><td>Confluence / PPT</td></tr>
           <tr><td>📄 PIR Report Template</td><td>5. Closure</td><td>PM / BA</td><td>Confluence / Word</td></tr>
           <tr><td>📄 Lessons Learned Template</td><td>5. Closure</td><td>SM / PM</td><td>Confluence</td></tr>
+          <tr><td>📄 Project Closure Document</td><td>5. Closure</td><td>PM</td><td>Confluence / Word</td></tr>
           <tr><td>📄 Incident Report Template</td><td>6. Operate</td><td>Tech Lead</td><td>Jira / Confluence</td></tr>
         </tbody>
       </table>
