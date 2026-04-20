@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PM Project Handbook | Handbook</title>
+  <meta name="description" content="Project Manager (PM) Role & Workflow — PMBOK® v7 aligned, Hybrid SDLC. Internal use only." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    /* ── extra styles for pm-handbook ── */
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-top: 10px; }
+    .metric-card { background: var(--bg-overlay); border: 1px solid var(--border-default); border-radius: var(--radius-md); padding: 14px; }
+    .metric-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .metric-value { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+    .art-block { background: var(--bg-overlay); border-left: 3px solid var(--accent); padding: 16px; margin: 12px 0; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 11.5px; color: var(--text-secondary); overflow-x: auto; white-space: pre; }
+    .table-pm { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .table-pm th, .table-pm td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border-subtle); }
+    .table-pm th { background: var(--bg-base); font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; }
+    .table-pm tr:hover td { background: var(--bg-hover); }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN OVERLAY ===== -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-icon">🏦</div>
+      <div class="login-brand">Handbook</div>
+      <div class="login-sub">PM Project Handbook · Confidential</div>
+    </div>
+    <form id="login-form" onsubmit="handleLogin(event)" autocomplete="off">
+      <div class="login-field"><label for="login-username">Username</label><input type="text" id="login-username" required /></div>
+      <div class="login-field"><label for="login-password">Password</label><div class="pw-wrap"><input type="password" id="login-password" required /><button type="button" class="pw-toggle" onclick="togglePw()">👁</button></div></div>
+      <div id="login-error" class="login-error"></div>
+      <button type="submit" class="login-btn" id="login-submit">Sign in</button>
+    </form>
+    <div class="login-footer">🔒 Authorized Personnel Only</div>
+  </div>
+</div>
+
+<button id="sidebar-toggle" aria-label="Toggle navigation" onclick="toggleSidebar()">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- ===== SIDEBAR ===== -->
+<aside id="sidebar">
+  <div class="sidebar-top">
+    <div class="bank-badge">
+      <div class="bank-icon">👔</div>
+      <div>
+        <div class="bank-title">PM Project Handbook</div>
+        <div class="bank-sub">PMBOK® v7 · Hybrid SDLC</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-section-label">Overview</div>
+  <nav id="sidebar-nav">
+    <a href="#section-identity" id="nav-identity" onclick="setActive(this)"><span class="nav-icon">🏠</span> Identity & Principles</a>
+    <a href="#section-visuals" id="nav-visuals" onclick="setActive(this)"><span class="nav-icon">👁️</span> Visual Overview</a>
+  </nav>
+
+  <div class="sidebar-section-label">End-to-End Workflow</div>
+  <nav id="sidebar-nav">
+    <a href="#section-p1" id="nav-p1" onclick="setActive(this)"><span class="nav-icon">1️⃣</span> Phase 1 — Initiating</a>
+    <a href="#section-p2" id="nav-p2" onclick="setActive(this)"><span class="nav-icon">2️⃣</span> Phase 2 — Planning</a>
+    <a href="#section-p3" id="nav-p3" onclick="setActive(this)"><span class="nav-icon">3️⃣</span> Phase 3 — Executing</a>
+    <a href="#section-p4" id="nav-p4" onclick="setActive(this)"><span class="nav-icon">4️⃣</span> Phase 4 — Monitoring</a>
+    <a href="#section-p5" id="nav-p5" onclick="setActive(this)"><span class="nav-icon">5️⃣</span> Phase 5 — Closing</a>
+  </nav>
+
+  <div class="sidebar-section-label">Frameworks</div>
+  <nav id="sidebar-nav">
+    <a href="#section-risk" id="nav-risk" onclick="setActive(this)"><span class="nav-icon">⚠️</span> Risk & Stakeholders</a>
+    <a href="#section-comm" id="nav-comm" onclick="setActive(this)"><span class="nav-icon">📡</span> Communication Cadence</a>
+    <a href="#section-change" id="nav-change" onclick="setActive(this)"><span class="nav-icon">🔄</span> Change & Quality</a>
+  </nav>
+
+  <div class="sidebar-section-label">Governance</div>
+  <nav id="sidebar-nav">
+    <a href="#section-gov" id="nav-gov" onclick="setActive(this)"><span class="nav-icon">🏛️</span> Structure & Tailoring</a>
+    <a href="#section-sdlc" id="nav-sdlc" onclick="setActive(this)"><span class="nav-icon">⚙️</span> SDLC Adaptation</a>
+    <a href="#section-doc" id="nav-doc" onclick="setActive(this)"><span class="nav-icon">📄</span> Document Ownership</a>
+  </nav>
+
+  <div class="sidebar-section-label">Reference</div>
+  <nav id="sidebar-nav">
+    <a href="#section-metrics" id="nav-metrics" onclick="setActive(this)"><span class="nav-icon">📊</span> Metrics & Anti-Patterns</a>
+    <a href="#section-artifacts" id="nav-artifacts" onclick="setActive(this)"><span class="nav-icon">📑</span> Sample Artifacts</a>
+  </nav>
+
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-meta">
+    <strong>Quick Links</strong>
+    <a href="handbook.html" style="color:var(--accent-bright);font-size:11px;">← Implementation Handbook</a><br/>
+    <a href="ba-handbook.html" style="color:var(--accent-bright);font-size:11px;">← BA Working Flow</a><br/>
+    <a href="index.html" style="color:var(--accent-bright);font-size:11px;">← Deployment Runbook</a>
+  </div>
+</aside>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div id="main-content">
+
+  <!-- HERO -->
+  <header class="top-header">
+    <div class="header-eyebrow">👔 Internal Handbook · PMBOK® v7 Aligned</div>
+    <h1>Project Manager (PM)<br/><span>Role & Workflow</span></h1>
+    <p>A comprehensive guide to the Senior Project Manager workflow within a hybrid SDLC model. You are accountable for scope, schedule, cost, quality, resources, communication, risk, procurement, stakeholders, and integration.</p>
+    <div class="header-pills">
+      <div class="header-pill"><div class="pill-dot" style="background:var(--accent)"></div> PMBOK® 7th Ed.</div>
+      <div class="header-pill"><div class="pill-dot" style="background:var(--status-yellow)"></div> Hybrid SDLC</div>
+      <div class="header-pill"><div class="pill-dot" style="background:var(--status-blue)"></div> 5 Process Groups</div>
+      <div class="header-pill"><div class="pill-dot" style="background:var(--status-red)"></div> INTERNAL USE ONLY</div>
+    </div>
+  </header>
+
+  <main class="content-sections">
+
+    <!-- OVERVIEW: Identity & Principles -->
+    <section class="section-block" id="section-identity">
+      <div class="section-header">
+        <div class="section-icon">🏠</div><div><div class="section-number">Overview</div><h2>Identity & Principles</h2></div>
+      </div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-body">
+          <div class="card-title">Identity & Context</div>
+          <p>You operate as a Senior Project Manager managing software implementations. You apply the PMI project management principles, navigating Waterfall, Agile/Scrum, Kanban, SAFe, or Hybrid models. You collaborate with: Project Sponsor, Steering Committee, BA, SA, DEV, QA, PO, UX/UI, DevOps/SRE, Security/Compliance, Finance/Procurement, Vendors, and Business Stakeholders.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">Guiding Principles (PMBOK 7th Edition)</div>
+          <ul class="step-cl" style="margin-top:10px;">
+            <li><strong>Stewardship:</strong> act ethically, honestly, and in the project's best interest</li>
+            <li><strong>Team:</strong> foster a collaborative, accountable team environment</li>
+            <li><strong>Stakeholders:</strong> engage them meaningfully throughout the project</li>
+            <li><strong>Value:</strong> focus on outcomes and business value, not just deliverables</li>
+            <li><strong>Systems thinking:</strong> understand interdependencies and broader context</li>
+            <li><strong>Leadership:</strong> demonstrate leadership behaviors at every level</li>
+            <li><strong>Tailoring:</strong> adapt approach to context, not the other way around</li>
+            <li><strong>Quality:</strong> build quality into processes and deliverables</li>
+            <li><strong>Complexity:</strong> navigate complexity with adaptability</li>
+            <li><strong>Risk:</strong> proactively identify and respond to threats & opportunities</li>
+            <li><strong>Adaptability & resilience:</strong> embrace change, learn from setbacks</li>
+            <li><strong>Change:</strong> enable change to achieve the envisioned future state</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <div class="section-divider"></div>
+
+    <!-- VISUAL OVERVIEW -->
+    <section class="section-block" id="section-visuals">
+      <div class="section-header">
+        <div class="section-icon">👁️</div><div><div class="section-number">Overview</div><h2>Visual Overview</h2></div>
+      </div>
+      <div class="card" style="margin-bottom:16px;"><div class="card-body">
+        <div class="card-title">Five Process Groups</div>
+        <pre class="art-block">INITIATING (Charter, stakeholder identification)
+   ↓
+PLANNING (PM plan, all baselines)
+   ↓
+EXECUTING (Deliver the work) <───> MONITORING & CONTROLLING (Track, correct)
+   ↓                                       ┊   
+CLOSING (Handover, lessons) <┈┈(Change requests)┈┈ PLANNING</pre>
+      </div></div>
+      <div class="card" style="margin-bottom:16px;"><div class="card-body">
+        <div class="card-title">Ten Knowledge Areas (PMBOK)</div>
+        <p><strong>Integration Management</strong> connects: Scope, Schedule, Cost, Quality, Resource, Communications, Risk, Procurement, and Stakeholder Management.</p>
+      </div></div>
+      <div class="card"><div class="card-body">
+        <div class="card-title">PM Role Interaction Map</div>
+        <table class="table-pm">
+          <tr><th>Role</th><th>Interactions</th></tr>
+          <tr><td>Sponsor / Steering</td><td>Provides vision, funding, decisions. PM provides status, risks, escalations.</td></tr>
+          <tr><td>Business Analyst</td><td>BA provides requirements, CR impact. PM provides scope, schedule, priorities.</td></tr>
+          <tr><td>Solution Architect</td><td>SA provides architecture, estimates. PM provides timeline, constraints.</td></tr>
+          <tr><td>Dev Team</td><td>DEV reports progress, blockers. PM assigns work priorities.</td></tr>
+          <tr><td>QA Team</td><td>QA reports defect trends, quality context. PM defines schedule, gates.</td></tr>
+          <tr><td>Vendors</td><td>Vendors deliver SOW items. PM handles contracts, deliverables, invoices.</td></tr>
+        </table>
+      </div></div>
+    </section>
+    <div class="section-divider"></div>
+
+    <!-- PHASE 1 -->
+    <section class="section-block" id="section-p1">
+      <div class="section-header">
+        <div class="section-icon">1️⃣</div><div><div class="section-number">End-to-End Workflow</div><h2>Phase 1 — Initiating</h2></div>
+      </div>
+      <div class="card"><div class="card-body">
+        <p><strong>Trigger:</strong> Business case approved; project authorized to start.</p>
+        <ol class="step-cl" style="margin-top:12px;">
+          <li><span class="step-num">1</span><strong>Develop Project Charter</strong> capturing purpose, scope, budget, risks, and authority.</li>
+          <li><span class="step-num">2</span><strong>Identify stakeholders</strong> — collaborate with BA on Stakeholder Register.</li>
+          <li><span class="step-num">3</span><strong>Conduct project kickoff</strong> with core team and stakeholders.</li>
+          <li><span class="step-num">4</span><strong>Assess organizational readiness</strong>: governance model and dependencies.</li>
+          <li><span class="step-num">5</span><strong>Define tailoring approach</strong> — select SDLC model and PM framework.</li>
+        </ol>
+        <div class="alert alert-info" style="margin-top:12px;"><span class="alert-icon">📄</span><div><strong>Primary outputs:</strong> Project Charter, Stakeholder Register, Kickoff Minutes, Tailoring Decision, initial Assumption Log.</div></div>
+      </div></div>
+    </section>
+    <div class="section-divider"></div>
+
+    <!-- PHASE 2 -->
+    <section class="section-block" id="section-p2">
+      <div class="section-header">
+        <div class="section-icon">2️⃣</div><div><div class="section-number">End-to-End Workflow</div><h2>Phase 2 — Planning</h2></div>
+      </div>
+      <div class="card"><div class="card-body">
+        <p><strong>Trigger:</strong> Charter approved; planning authorized.</p>
+        <table class="table-pm" style="margin-top:12px;">
+          <tr><th style="width:160px">Knowledge Area</th><th>Activities</th></tr>
+          <tr><td><strong>Integration</strong></td><td>Develop Project Management Plan, establish CCB / change process.</td></tr>
+          <tr><td><strong>Scope</strong></td><td>Scope Statement, WBS, WBS Dictionary, Scope Baseline.</td></tr>
+          <tr><td><strong>Schedule</strong></td><td>Network Diagram, duration estimates, Schedule Baseline, Release Plan, Sprint cadence.</td></tr>
+          <tr><td><strong>Cost</strong></td><td>Bottom-Up estimates, Cost Baseline, Management Reserve, EVM metrics.</td></tr>
+          <tr><td><strong>Quality</strong></td><td>Quality Mgmt Plan, Definition of Done, checkpoints, audits.</td></tr>
+          <tr><td><strong>Resource</strong></td><td>RACI Matrix, Resource Calendar, Team Development Plan.</td></tr>
+          <tr><td><strong>Communications</strong></td><td>Comms Mgmt Plan, reporting cadence, Escalation Matrix.</td></tr>
+          <tr><td><strong>Risk</strong></td><td>Risk Identification workshops, Qualitative/Quantitative analysis, Response Plans, Risk Register.</td></tr>
+          <tr><td><strong>Procurement</strong></td><td>Procurement Mgmt Plan, SOW templates, vendor selection criteria.</td></tr>
+          <tr><td><strong>Stakeholder</strong></td><td>Stakeholder Engagement Plan strategies.</td></tr>
+        </table>
+        <div class="alert alert-info" style="margin-top:12px;"><span class="alert-icon">📄</span><div><strong>Primary outputs:</strong> PM Plan, Baselines (Scope/Schedule/Cost), 6 Subsidiary Plans, RACI, Risk Register.</div></div>
+      </div></div>
+    </section>
+    <div class="section-divider"></div>
+
+    <!-- PHASE 3 -->
+    <section class="section-block" id="section-p3">
+      <div class="section-header">
+        <div class="section-icon">3️⃣</div><div><div class="section-number">End-to-End Workflow</div><h2>Phase 3 — Executing</h2></div>
+      </div>
+      <div class="card"><div class="card-body">
+        <p><strong>Trigger:</strong> Planning approved; execution authorized.</p>
+        <ol class="step-cl" style="margin-top:12px;">
+          <li><span class="step-num">1</span>Direct & manage project work (remove blockers).</li>
+          <li><span class="step-num">2</span>Manage project knowledge (Lessons Learned Register).</li>
+          <li><span class="step-num">3</span>Manage quality (audits, standard verification).</li>
+          <li><span class="step-num">4</span>Acquire, develop, and manage team (1:1s, performance, onboarding).</li>
+          <li><span class="step-num">5</span>Manage communications (distribute reports, meetings).</li>
+          <li><span class="step-num">6</span>Implement risk responses.</li>
+          <li><span class="step-num">7</span>Conduct procurements (vendor management).</li>
+          <li><span class="step-num">8</span>Manage stakeholder engagement.</li>
+          <li><span class="step-num">9</span>Facilitate ceremonies (Agile) or phase gates (Waterfall).</li>
+          <li><span class="step-num">10</span>Manage cross-team dependencies.</li>
+        </ol>
+      </div></div>
+    </section>
+    <div class="section-divider"></div>
+
+    <!-- PHASE 4 -->
+    <section class="section-block" id="section-p4">
+      <div class="section-header">
+        <div class="section-icon">4️⃣</div><div><div class="section-number">End-to-End Workflow</div><h2>Phase 4 — Monitoring & Controlling</h2></div>
+      </div>
+      <div class="card"><div class="card-body">
+        <p><strong>Trigger:</strong> Execution begins; runs in parallel until closing.</p>
+        <ul class="step-cl" style="margin-top:12px;">
+          <li><strong>Integrated Change Control:</strong> Evaluate CRs, CCB approvals, update baselines.</li>
+          <li><strong>Scope Control:</strong> Validate deliverables, prevent scope creep.</li>
+          <li><strong>Schedule Control:</strong> Trend analysis, Burn-down charts, Critical Path, fast-tracking.</li>
+          <li><strong>Cost Control:</strong> EVM metrics (CPI, SPI, EAC), budget tracking.</li>
+          <li><strong>Quality Control:</strong> Defect metrics review, root cause analysis.</li>
+          <li><strong>Risk & Issue Control:</strong> Monitor triggers, execute contingency plans, periodic Risk Reviews.</li>
+          <li><strong>Procurement & Stakeholders:</strong> Vendor SLAs, engagement correction.</li>
+        </ul>
+        <div class="alert alert-warning" style="margin-top:12px;"><span class="alert-icon">📄</span><div><strong>Primary outputs:</strong> Weekly Status Reports, Change Log, Updated Risk/Issue Logs, Variance & EVM Reports.</div></div>
+      </div></div>
+    </section>
+    <div class="section-divider"></div>
+
+    <!-- PHASE 5 -->
+    <section class="section-block" id="section-p5">
+      <div class="section-header">
+        <div class="section-icon">5️⃣</div><div><div class="section-number">End-to-End Workflow</div><h2>Phase 5 — Closing</h2></div>
+      </div>
+      <div class="card"><div class="card-body">
+        <p><strong>Trigger:</strong> Deliverables accepted; ready for closure.</p>
+        <ol class="step-cl" style="margin-top:12px;">
+          <li><span class="step-num">1</span>Final product/service acceptance (sign-off).</li>
+          <li><span class="step-num">2</span>Administrative closure: archive docs, close contracts, release resources.</li>
+          <li><span class="step-num">3</span>Financial closure: final reconciliation, close budget codes.</li>
+          <li><span class="step-num">4</span>Project Closing Meeting / Retrospective.</li>
+          <li><span class="step-num">5</span>Document and share Lessons Learned definitively.</li>
+          <li><span class="step-num">6</span>Schedule Benefits Realization Review (3-6 mo post go-live).</li>
+        </ol>
+      </div></div>
+    </section>
+    <div class="section-divider"></div>
+
+    <!-- RISK & STAKEHOLDERS -->
+    <section class="section-block" id="section-risk">
+      <div class="section-header">
+        <div class="section-icon">⚠️</div><div><div class="section-number">Frameworks</div><h2>Risk & Stakeholder Management</h2></div>
+      </div>
+      <div class="card"><div class="card-body">
+        <div class="card-title">Risk Management Framework</div>
+        <p><strong>Categories:</strong> Technical, Schedule, Cost, Resource, Scope, Quality, Vendor, Organizational, External, Security.</p>
+        <p><strong>Risk Scoring (5x5 Matrix):</strong> Probability × Impact = Exposure. 1-4 (Low), 5-9 (Medium), 10-16 (High - active resp), 17-25 (Very High - exec escalation).</p>
+        <p><strong>Response Strategies:</strong> Threats (Avoid/Transfer/Mitigate/Accept/Escalate). Opportunities (Exploit/Share/Enhance/Accept/Escalate).</p>
+      </div></div>
+      <div class="card"><div class="card-body">
+        <div class="card-title">Stakeholder Management</div>
+        <p><strong>Power/Interest Grid:</strong> High Power/High Interest = Manage Closely. High Power/Low Interest = Keep Satisfied. Low/High = Keep Informed. Low/Low = Monitor.</p>
+        <p><strong>Engagement Levels:</strong> Unaware → Resistant → Neutral → Supportive → Leading.</p>
+      </div></div>
+    </section>
+    <div class="section-divider"></div>
+
+    <!-- COMMUNICATION CADENCE -->
+    <section class="section-block" id="section-comm">
+      <div class="section-header">
+        <div class="section-icon">📡</div><div><div class="section-number">Frameworks</div><h2>Communication Cadence</h2></div>
+      </div>
+      <div class="card"><div class="card-body">
+        <table class="table-pm">
+          <tr><th>Audience</th><th>Frequency</th><th>Format</th></tr>
+          <tr><td>Dev Team</td><td>Daily</td><td>Standup (15 min)</td></tr>
+          <tr><td>Project Core Team</td><td>Weekly</td><td>Working Session (60 min)</td></tr>
+          <tr><td>Team + BA/QA</td><td>Weekly/Bi-weekly</td><td>Status Meeting (45 min)</td></tr>
+          <tr><td>Stakeholders</td><td>Bi-weekly</td><td>Status Report (email)</td></tr>
+          <tr><td>Steering Committee</td><td>Monthly</td><td>Steering Pack + Meeting (60 min)</td></tr>
+          <tr><td>Sponsor</td><td>Bi-weekly</td><td>1:1 Sync (30 min)</td></tr>
+          <tr><td>Executive Leadership</td><td>Monthly/Quarterly</td><td>Executive Dashboard</td></tr>
+        </table>
+        <div class="alert alert-info" style="margin-top:12px;"><strong>RAG Definitions:</strong> 🟢 Green (On track), 🟡 Amber (Mitigation in progress), 🔴 Red (Escalation required, off track).</div>
+      </div></div>
+    </section>
+    <div class="section-divider"></div>
+
+    <!-- CHANGE & QUALITY -->
+    <section class="section-block" id="section-change">
+      <div class="section-header">
+        <div class="section-icon">🔄</div><div><div class="section-number">Frameworks</div><h2>Change Control & Quality Gates</h2></div>
+      </div>
+      <div class="card"><div class="card-body">
+        <div class="card-title">Change Control Process</div>
+        <p>CR Raised → Logged → Impact Assessment (Scope/Schedule/Cost/Quality/Risk) → Triage Level.</p>
+        <p><strong>Authority Levels:</strong><br/>PM (<5% cost/schedule, no scope change).<br/>CCB (5-15% impact or minor scope).<br/>Steering Committee (>15% impact, strategic change).</p>
+      </div></div>
+      <div class="card"><div class="card-body">
+        <div class="card-title">Monthly Health Check</div>
+        <ul class="step-cl">
+          <li>Scope: on track vs WBS. Schedule: SPI > 0.9. Cost: CPI > 0.9.</li>
+          <li>Quality: no Critical/Major defects. Resources: no key person dependency.</li>
+          <li>Risks: Top 5 managed, no unaddressed Red. Stakeholders: healthy engagement.</li>
+        </ul>
+      </div></div>
+    </section>
+    <div class="section-divider"></div>
+
+    <!-- GOVERNANCE & TAILORING -->
+    <section class="section-block" id="section-gov">
+      <div class="section-header">
+        <div class="section-icon">🏛️</div><div><div class="section-number">Governance</div><h2>Structure & Tailoring</h2></div>
+      </div>
+      <div class="card"><div class="card-body">
+        <div class="card-title">Three-Tier Governance</div>
+        <ul class="step-cl">
+          <li><strong>Executive/Sponsor Layer:</strong> Strategic decisions, funding.</li>
+          <li><strong>Steering Committee:</strong> Tactical decisions, major changes. Monthly cadence.</li>
+          <li><strong>Project Operations:</strong> Daily delivery, minor decisions, facilitated by PM.</li>
+        </ul>
+      </div></div>
+      <div class="card"><div class="card-body">
+        <div class="card-title">Escalation Matrix (Max Response Time)</div>
+        <table class="table-pm">
+          <tr><th>Issue Type</th><th>1st Level</th><th>2nd Level</th><th>3rd Level</th><th>Max Time</th></tr>
+          <tr><td>Tech Blocker</td><td>SA / Tech Lead</td><td>PM</td><td>Steering</td><td>24h</td></tr>
+          <tr><td>Budget Overrun</td><td>PM</td><td>Finance → Sponsor</td><td>Executive</td><td>48h</td></tr>
+          <tr><td>Schedule Slip >10%</td><td>PM</td><td>Steering</td><td>Executive</td><td>1 week</td></tr>
+          <tr><td>Security Incident</td><td>Security → PM</td><td>Sponsor</td><td>Exec + CISO</td><td>4h</td></tr>
+        </table>
+      </div></div>
+      <div class="card"><div class="card-body">
+        <div class="card-title">Tailoring Dimensions</div>
+        <p>Adapt to Team Size, Duration, Tech Novelty, Regulatory Scope, Budget, and Strategic Importance. Decisions MUST be documented in the <strong>Tailoring Decision Document</strong> during Initiating.</p>
+      </div></div>
+    </section>
+    <div class="section-divider"></div>
+
+    <!-- SDLC & DOCS -->
+    <section class="section-block" id="section-sdlc">
+      <div class="section-header">
+        <div class="section-icon">⚙️</div><div><div class="section-number">Governance</div><h2>SDLC Adaptation & Doc Matrix</h2></div>
+      </div>
+      <div class="card"><div class="card-body">
+        <p><strong>Waterfall:</strong> Formal gates, locked baselines, detailed EVM, heavy docs.</p>
+        <p><strong>Agile (Scrum):</strong> Sprint-level plans, velocity metrics, lightweight docs, backlog reprioritization.</p>
+        <p><strong>Hybrid:</strong> Strategic Waterfall planning & governance + Agile sprint execution. Cross-phase changes use CCB; sprint changes use backlog.</p>
+      </div></div>
+    </section>
+
+    <!-- DOC OWNERSHIP -->
+    <section class="section-block" id="section-doc">
+      <div class="card"><div class="card-body">
+        <div class="card-title">Document Ownership Matrix</div>
+        <table class="table-pm">
+          <tr><th>Document</th><th>PM Role</th><th>Collaborators</th></tr>
+          <tr><td>Project Charter, PM Plan, Baselines</td><td><strong>Author</strong></td><td>Sponsor, All Leads</td></tr>
+          <tr><td>Communications, Risk, Procurement Plans</td><td><strong>Author</strong></td><td>Stakeholders, Risk, Legal</td></tr>
+          <tr><td>Issue, Risk, Change, Decision Logs</td><td><strong>Author</strong></td><td>Team, CCB, Sponsor</td></tr>
+          <tr><td>Stakeholder Register</td><td><strong>Co-Author</strong></td><td>BA</td></tr>
+          <tr><td>BRD / SRS / Arch Doc</td><td><strong>Reviewer</strong></td><td>BA / SA</td></tr>
+        </table>
+      </div></div>
+    </section>
+    <div class="section-divider"></div>
+
+    <!-- REFERENCE: Metrics, Anti-Patterns -->
+    <section class="section-block" id="section-metrics">
+      <div class="section-header">
+        <div class="section-icon">📊</div><div><div class="section-number">Reference</div><h2>Metrics & Anti-Patterns</h2></div>
+      </div>
+      <div class="card"><div class="card-body">
+        <div class="card-title">Anti-Patterns (What NOT to do)</div>
+        <ul class="step-cl">
+          <li>❌ Execute without signed Charter or baseline before stakeholder sign-off.</li>
+          <li>❌ Micromanage team (instead, remove blockers). Hide problems from sponsor.</li>
+          <li>❌ Report green when yellow/red. Treat EVM as theater.</li>
+          <li>❌ Skip lessons learned. Close without formal acceptance.</li>
+          <li>❌ Act as message relay; own problems you should escalate & vice versa.</li>
+        </ul>
+      </div></div>
+      <div class="card"><div class="card-body">
+        <div class="card-title">KPIs</div>
+        <div class="metric-grid">
+          <div class="metric-card"><div class="metric-title">Schedule</div><div class="metric-value">SPI ≥ 0.95</div></div>
+          <div class="metric-card"><div class="metric-title">Cost</div><div class="metric-value">CPI ≥ 0.95</div></div>
+          <div class="metric-card"><div class="metric-title">Quality</div><div class="metric-value">Defect Leakage < 5%</div></div>
+        </div>
+      </div></div>
+    </section>
+    <div class="section-divider"></div>
+
+    <!-- ARTIFACTS -->
+    <section class="section-block" id="section-artifacts">
+      <div class="section-header">
+        <div class="section-icon">📑</div><div><div class="section-number">Reference</div><h2>Sample Artifacts & Templates</h2></div>
+      </div>
+      <div class="card" style="padding: 10px 20px;">
+        <p>The PM must guarantee these artifacts are complete, baselined, and distributed appropriately.</p>
+        <!-- Artifacts can be provided here using CSS accordions or separate links. We will list them. -->
+        <ul class="step-cl" style="margin-top:12px;">
+          <li><strong>Project Charter:</strong> Purpose, objectives, constraints, milestones, PM authority.</li>
+          <li><strong>Stakeholder Register:</strong> Influence/Interest, current/desired engagement strategies.</li>
+          <li><strong>RACI Matrix:</strong> Critical rule — only ONE "A" (Accountable) per row.</li>
+          <li><strong>Weekly Status Report:</strong> RAG status, KPIs, key accomplishments, top 5 risks/issues, decisions needed.</li>
+          <li><strong>Steering Committee Pack:</strong> Aggregated summary tailored for executives (60 min presentation).</li>
+          <li><strong>Risk Register / Issue Log / Decision Log / Change Request:</strong> Detailed lifecycle tracking items.</li>
+          <li><strong>Project Closure Document:</strong> Performance metrics vs baseline, sign-offs, benefits realization.</li>
+        </ul>
+        <div class="alert alert-success" style="margin-top:14px;"><span class="alert-icon">✅</span><div><strong>Artifact Checklist:</strong> Every document must have Owner, Version, Status, Date. Numbers must have units. Decisions must have approvers. Action items must have deadlines.</div></div>
+      </div>
+    </section>
+    <div class="section-divider"></div>
+
+  </main>
+</div>
+
+<script src="assets/js/main.js"></script>
+<script>
+  function setActive(el) {
+    document.querySelectorAll('#sidebar-nav a').forEach(a => a.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+  function togglePw() {
+    const pw = document.getElementById('login-password');
+    pw.type = pw.type === 'password' ? 'text' : 'password';
+  }
+</script>
+</body>
+</html>
