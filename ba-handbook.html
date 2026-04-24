@@ -7,8 +7,10 @@
   <meta name="description" content="Business Analyst Project Implement Handbook — BABOK v3 aligned, Hybrid Water-Scrum-Fall SDLC. Internal use only." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <!-- Anti-FOUC: apply saved theme before first paint -->
+  <script>(function(){var t=localStorage.getItem('nt_theme')||'dark';document.documentElement.setAttribute('data-theme',t)})();</script>
   <style>
     /* ── BA Handbook extras ── */
     .phase-timeline { display: flex; flex-direction: column; gap: 0; margin: 20px 0; }
@@ -25,149 +27,131 @@
     .pt-dot {
       width: 32px; height: 32px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 800; flex-shrink: 0;
-      border: 2px solid var(--border-default);
-      background: var(--bg-overlay);
-      color: var(--text-muted);
+      font-size: 11px; font-weight: 700; flex-shrink: 0;
+      font-family: var(--font-mono);
+      border: 1px solid var(--border);
+      background: var(--surface-raised);
+      color: var(--text-secondary);
       z-index: 1;
     }
 
-    .pt-dot.done   { background: var(--status-green-bg);  border-color: var(--status-green);  color: var(--status-green); }
-    .pt-dot.active { background: var(--accent-dim);        border-color: var(--accent);         color: var(--accent-bright); box-shadow: 0 0 10px var(--accent-glow); }
-    .pt-dot.waterfall { background: var(--status-blue-bg); border-color: var(--status-blue); color: var(--status-blue); }
-    .pt-dot.agile  { background: var(--status-green-bg);  border-color: var(--status-green);  color: var(--status-green); }
-    .pt-dot.hybrid { background: var(--status-purple-bg); border-color: var(--status-purple); color: var(--status-purple); }
+    .pt-dot.done     { border-color: var(--success);  color: var(--success); background: var(--success-bg); }
+    .pt-dot.active   { border-color: var(--accent);   color: var(--accent);  background: var(--accent-subtle); }
+    .pt-dot.waterfall{ border-color: var(--info);     color: var(--info);    background: var(--info-bg); }
+    .pt-dot.agile    { border-color: var(--success);  color: var(--success); background: var(--success-bg); }
+    .pt-dot.hybrid   { border-color: var(--status-purple); color: var(--status-purple); background: var(--status-purple-bg); }
 
     .pt-line {
-      width: 2px; flex: 1; min-height: 24px;
-      background: var(--border-default);
+      width: 1px; flex: 1; min-height: 20px;
+      background: var(--border-visible);
       margin: 2px auto;
     }
 
     .pt-content {
-      flex: 1; padding: 0 0 24px 16px;
+      flex: 1; padding: 0 0 20px 14px;
     }
 
     .pt-header {
       display: flex; align-items: center; gap: 10px;
-      margin-bottom: 10px; padding-top: 4px;
+      margin-bottom: 8px; padding-top: 4px;
     }
 
     .pt-phase-label {
-      font-size: 9px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.1em; color: var(--text-muted);
+      font-family: var(--font-mono); font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-disabled);
     }
 
-    .pt-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+    .pt-title { font-size: 14px; font-weight: 700; color: var(--text-display); }
 
     .pt-sdlc-tag {
-      font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 4px;
-      text-transform: uppercase; letter-spacing: 0.04em; margin-left: auto;
+      font-family: var(--font-mono); font-size: 9px; font-weight: 700;
+      padding: 2px 7px; border-radius: 3px; text-transform: uppercase;
+      letter-spacing: 0.04em; margin-left: auto; border: 1px solid currentColor;
     }
 
-    .pt-body { font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; }
+    .pt-body { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
 
-    .pt-outputs {
-      margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px;
-    }
+    .pt-outputs { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 5px; }
 
     .pt-output-tag {
-      font-size: 10px; font-weight: 600; padding: 3px 8px;
-      border-radius: 20px; background: var(--bg-active);
-      border: 1px solid var(--border-default);
-      color: var(--text-secondary);
+      font-family: var(--font-mono); font-size: 9px; font-weight: 700;
+      padding: 2px 8px; border-radius: 3px;
+      background: var(--surface-overlay); border: 1px solid var(--border-visible);
+      color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.04em;
     }
 
-    /* Role interaction map */
     .role-map {
       display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 10px; margin: 14px 0;
     }
 
     .role-node {
-      background: var(--bg-overlay); border: 1px solid var(--border-default);
-      border-radius: var(--radius-md); padding: 14px;
-      text-align: center; transition: border-color 0.15s;
+      background: var(--surface-raised); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 14px;
+      text-align: center; transition: border-color 0.1s;
     }
 
-    .role-node:hover { border-color: var(--accent); }
+    .role-node:hover { border-color: var(--border-visible); }
     .role-node.center-ba {
       grid-column: 2; grid-row: 1;
-      border-color: var(--accent);
-      background: var(--accent-dim);
+      border-color: var(--accent); background: var(--accent-subtle);
     }
 
-    .role-node-icon { font-size: 22px; margin-bottom: 6px; }
-    .role-node-name { font-size: 12px; font-weight: 700; color: var(--text-primary); }
-    .role-node-desc { font-size: 10.5px; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
+    .role-node-icon { font-size: 20px; margin-bottom: 6px; }
+    .role-node-name { font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--text-display); text-transform: uppercase; letter-spacing: 0.06em; }
+    .role-node-desc { font-size: 11px; color: var(--text-secondary); margin-top: 3px; line-height: 1.4; }
 
-    /* Flow arrows */
-    .role-flow { font-size: 11px; color: var(--text-muted); margin: 4px 0; }
+    .role-flow { font-family: var(--font-mono); font-size: 10px; color: var(--text-disabled); margin: 3px 0; }
 
-    /* Tech matrix table */
     .tech-matrix { width: 100%; border-collapse: collapse; font-size: 12px; }
     .tech-matrix th {
-      background: var(--bg-base); text-align: left;
-      padding: 8px 12px; font-size: 10px; font-weight: 700;
-      color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em;
-      border-bottom: 1px solid var(--border-default);
+      background: var(--black); text-align: left;
+      padding: 8px 12px; font-size: 9px; font-weight: 700;
+      font-family: var(--font-mono); color: var(--text-disabled);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--border-visible);
     }
     .tech-matrix td {
-      padding: 9px 12px; border-bottom: 1px solid var(--border-subtle);
+      padding: 10px 12px; border-bottom: 1px solid var(--border);
       color: var(--text-secondary); vertical-align: top; line-height: 1.6;
     }
     .tech-matrix tr:last-child td { border-bottom: none; }
     .tech-matrix tr:hover td { background: var(--bg-hover); }
-    .tech-matrix td:first-child { font-weight: 700; color: var(--text-primary); white-space: nowrap; }
+    .tech-matrix td:first-child { font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--text-primary); white-space: nowrap; text-transform: uppercase; letter-spacing: 0.04em; }
 
-    /* Quality gate checklist */
     .qg-list { list-style: none; margin: 10px 0; }
     .qg-list li {
       display: flex; align-items: flex-start; gap: 8px;
-      padding: 6px 0; border-bottom: 1px solid var(--border-subtle);
-      font-size: 12.5px; color: var(--text-secondary);
+      padding: 6px 0; border-bottom: 1px solid var(--border);
+      font-size: 13px; color: var(--text-secondary);
     }
     .qg-list li:last-child { border-bottom: none; }
     .qg-check {
-      width: 16px; height: 16px; border-radius: 4px;
-      border: 1.5px solid var(--border-strong);
-      flex-shrink: 0; margin-top: 2px;
-      background: var(--bg-overlay);
+      width: 16px; height: 16px; border-radius: 3px;
+      border: 1px solid var(--border-visible); flex-shrink: 0; margin-top: 2px;
+      background: var(--surface-overlay);
     }
 
-    /* Anti-pattern items */
     .ap-item {
       display: flex; gap: 8px; align-items: flex-start;
-      padding: 7px 0; border-bottom: 1px solid var(--border-subtle);
-      font-size: 12.5px;
+      padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px;
     }
     .ap-item:last-child { border-bottom: none; }
-    .ap-bad  { color: var(--status-red); }
-    .ap-good { color: var(--status-green); }
+    .ap-bad  { color: var(--accent); }
+    .ap-good { color: var(--success); }
 
-    /* SMART/INVEST badges */
-    .invest-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
-    }
+    .invest-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
     .invest-card {
-      background: var(--bg-overlay); border: 1px solid var(--border-default);
-      border-radius: var(--radius-md); padding: 12px;
-      text-align: center;
+      background: var(--surface-raised); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 12px; text-align: center;
     }
-    .invest-letter {
-      font-size: 22px; font-weight: 800; color: var(--accent-bright);
-      letter-spacing: -0.02em;
-    }
-    .invest-word {
-      font-size: 10.5px; font-weight: 700; color: var(--text-primary);
-      margin: 2px 0;
-    }
-    .invest-desc { font-size: 10px; color: var(--text-muted); line-height: 1.4; }
+    .invest-letter { font-family: var(--font-mono); font-size: 22px; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
+    .invest-word { font-size: 11px; font-weight: 700; color: var(--text-primary); margin: 2px 0; text-transform: uppercase; letter-spacing: 0.06em; }
+    .invest-desc { font-size: 10px; color: var(--text-disabled); line-height: 1.4; }
 
-    /* Document ownership colors */
-    .own-author  { color: var(--accent-bright); font-weight: 700; }
-    .own-contrib { color: var(--status-yellow); font-weight: 600; }
-    .own-review  { color: var(--status-blue); font-weight: 600; }
+    .own-author  { color: var(--accent); font-weight: 700; font-family: var(--font-mono); }
+    .own-contrib { color: var(--warning); font-weight: 700; font-family: var(--font-mono); }
+    .own-review  { color: var(--info); font-weight: 700; font-family: var(--font-mono); }
 
     @media (max-width: 900px) {
       .role-map { grid-template-columns: 1fr 1fr; }

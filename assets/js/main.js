@@ -1,7 +1,68 @@
 /**
  * main.js - Handbook deployment pages
- * Handles: authentication, sidebar navigation, accordion, role tabs, DoD checklist
+ * Handles: authentication, theme, sidebar navigation, accordion, role tabs, DoD checklist
  */
+
+// ============================================================
+// THEME — Dark / Light mode
+// Runs immediately to prevent flash of wrong theme (FOUC)
+// ============================================================
+(function initTheme() {
+  const saved = localStorage.getItem('nt_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  // Enable transitions only after initial paint
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.documentElement.classList.add('theme-ready');
+    });
+  });
+})();
+
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('nt_theme', theme);
+  _updateThemeBtns(theme);
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  setTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+function _updateThemeBtns(theme) {
+  const darkBtn  = document.getElementById('ts-dark');
+  const lightBtn = document.getElementById('ts-light');
+  if (!darkBtn || !lightBtn) return;
+  darkBtn.classList.toggle('active',  theme === 'dark');
+  lightBtn.classList.toggle('active', theme === 'light');
+}
+
+function _injectThemeToggle() {
+  if (document.getElementById('theme-toggle-wrap')) return;
+  const sidebar = document.getElementById('sidebar') || document.getElementById('hb-sidebar');
+  if (!sidebar) return;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'theme-toggle-wrap';
+  wrap.id = 'theme-toggle-wrap';
+  wrap.innerHTML = `
+    <div class="theme-seg">
+      <button class="ts-btn" id="ts-dark"  onclick="setTheme('dark')">
+        <span>☽</span><span>Dark</span>
+      </button>
+      <button class="ts-btn" id="ts-light" onclick="setTheme('light')">
+        <span>☀</span><span>Light</span>
+      </button>
+    </div>`;
+
+  const header = sidebar.querySelector('.sidebar-top, .sb-top');
+  if (header) header.insertAdjacentElement('afterend', wrap);
+  else sidebar.insertBefore(wrap, sidebar.firstChild);
+
+  _updateThemeBtns(document.documentElement.getAttribute('data-theme') || 'dark');
+}
+
+document.addEventListener('DOMContentLoaded', _injectThemeToggle);
 
 // ============================================================
 // AUTHENTICATION
